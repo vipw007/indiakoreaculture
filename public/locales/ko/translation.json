@@ -1,0 +1,51 @@
+{
+  "header": {
+    "home": "홈",
+    "tourism": "관광 및 문화",
+    "office": "사무실 문화",
+    "chatbot": "비벡과 유에게 물어보세요",
+    "community": "커뮤니티",
+    "login": "로그인",
+    "logout": "로그아웃"
+  },
+  "homepage": {
+    "community": "지역 사회",
+    "community_text": "연결 및 공유",
+    "trust": "신뢰",
+    "trust_text": "믿고 관계를 구축하라",
+    "culture": "문화",
+    "culture_text": "가치 탐구 및 교환",
+    "title": "인도 ⇄ 한국 문화의 다리",
+    "vision": "비전",
+    "vision_text": "문화 교류 플랫폼 구축.",
+    "value": "가치",
+    "value_text": "사용자는 다른 나라의 문화와 언어를 이해할 수 있습니다.",
+    "mission": "사명",
+    "mission_points": [
+      "주요 관광지 및 간단한 현지 표현 제공.",
+      "오해를 피하기 위해 문화적 금기 사항 설명.",
+      "사진, 비디오 및 채팅 공유 플랫폼 제공.",
+      "실시간 채팅 및 화상 통화로 소통 가능."
+    ],
+    "explore_culture": "문화 탐방",
+    "ask_questions": "질문하기",
+    "features_title": "우리의 기능 살펴보기",
+    "features_subtitle": "지식과 진정한 연결을 통해 신뢰 구축",
+    "trust_title": "왜 우리를 신뢰해야 하는가?",
+    "comprehensive": "포괄적인",
+    "comprehensive_text": "문화 교류의 모든 측면을 다루는 상세한 가이드",
+    "safe": "안전 및 중재",
+    "safe_text": "검증된 프로필 및 중재된 커뮤니티 상호 작용",
+    "authentic": "진정한",
+    "authentic_text": "문화 전문가 및 커뮤니티 회원의 실제 통찰력",
+    "footer_destination": "목적지별로 찾아보기",
+    "footer_usa": "미국",
+    "footer_europe": "유럽",
+    "footer_india": "인도",
+    "footer_korea": "대한민국",
+    "footer_support": "지원",
+    "footer_contact": "문의하기",
+    "footer_faq": "자주 묻는 질문",
+    "copyright": "© {{year}} 인도 ⇄ 한국 문화의 다리. 모든 권리 보유."
+  }
+}

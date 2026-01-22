@@ -1,0 +1,51 @@
+{
+  "header": {
+    "home": "Home",
+    "tourism": "Tourism & Culture",
+    "office": "Office Culture",
+    "chatbot": "Ask Vivek & Mr. Yu",
+    "community": "Community",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "homepage": {
+    "culture": "Culture",
+    "culture_text": "Explore & Exchange values",
+    "community": "Community",
+    "community_text": "Connect and Share",
+    "trust": "Trust",
+    "trust_text": "Believe and Build Relations",
+    "title": "India ⇄ Korea Cultural Bridge",
+    "vision": "Vision",
+    "vision_text": "Build a culture exchange platform.",
+    "value": "Value",
+    "value_text": "Users can understand the cultures and languages of other countries.",
+    "mission": "Mission",
+    "mission_points": [
+      "Provide key tourist spots and simple local expressions.",
+      "Explain cultural taboos to avoid misunderstandings.",
+      "Offer a platform for sharing photos, videos, and chatting.",
+      "Enable real-time chat and video calls for communication."
+    ],
+    "explore_culture": "Explore Culture",
+    "ask_questions": "Ask Questions",
+    "features_title": "Explore Our Features",
+    "features_subtitle": "Building trust through knowledge and authentic connections",
+    "trust_title": "Why Trust Us?",
+    "comprehensive": "Comprehensive",
+    "comprehensive_text": "Detailed guides covering all aspects of cultural exchange",
+    "safe": "Safe & Moderated",
+    "safe_text": "Verified profiles and moderated community interactions",
+    "authentic": "Authentic",
+    "authentic_text": "Real insights from cultural experts and community members",
+    "footer_destination": "Browse by Destination",
+    "footer_usa": "United States",
+    "footer_europe": "Europe",
+    "footer_india": "India",
+    "footer_korea": "Korea",
+    "footer_support": "Support",
+    "footer_contact": "Contact Us",
+    "footer_faq": "FAQ",
+    "copyright": "© {{year}} India ⇄ Korea Cultural Bridge. All rights reserved."
+  }
+}
