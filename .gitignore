@@ -15,3 +15,6 @@ node_modules/
 # Firebase service account key
 /scripts/serviceAccountKey.json
 vivek8470/
+
+# Firebase
+.firebaserc
