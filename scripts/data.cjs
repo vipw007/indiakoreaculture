@@ -5,7 +5,11 @@ const indianStatesData = [
     id: 'rajasthan',
     name: 'Rajasthan',
     description: 'Land of Kings with majestic forts, palaces, and desert landscapes',
-    image: 'https://images.unsplash.com/photo-1534758607507-754e582adfa4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxqYWlwdXJpYmFja2dyb3VuZCUyMGluZGlhfGVufDF8fHx8MTcwNjY5NTY4Nnww&ixlib=rb-4.1.0&q=80&w=1080',
+    image: 'https://images.unsplash.com/photo-1534758607507-754e582adfa4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxqYWlwdXIlMjBhbWJlciUyMGZvcnQlMjBpbmRpYXxlbnwxfHx8fDE3NjgzMzQ4OTl8MA&ixlib=rb-4.1.0&q=80&w=1080',
+    weather: 'Hot',
+    mood: ['Culture', 'Photography', 'Adventure'],
+    bestSeason: 'Winter',
+    category: 'Hot & Sunny Destinations',
     places: [
       {
         name: 'Hawa Mahal',
@@ -81,6 +85,10 @@ const indianStatesData = [
     name: 'Maharashtra',
     description: 'Gateway to India with vibrant cities, historic caves, and coastal beauty',
     image: 'https://images.unsplash.com/photo-1562979314-199a1c4f3a06',
+    weather: 'Hot',
+    mood: ['Culture', 'Adventure', 'Romantic'],
+    bestSeason: 'Winter',
+    category: 'Hot & Sunny Destinations',
     places: [
       {
         name: 'Gateway of India',
@@ -146,6 +154,10 @@ const indianStatesData = [
     name: 'Uttar Pradesh',
     description: 'Home to the Taj Mahal and ancient spiritual cities along the Ganges',
     image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523',
+    weather: 'Mixed',
+    mood: ['Spiritual', 'Culture', 'Photography'],
+    bestSeason: 'Winter',
+    category: 'Spiritual & Cultural Heartland',
     places: [
       {
         name: 'Taj Mahal',
@@ -210,6 +222,10 @@ const indianStatesData = [
     name: 'Karnataka',
     description: 'Silicon Valley of India with ancient temples, palaces, and lush landscapes',
     image: 'https://images.unsplash.com/photo-1637075735042-727375ffcb6a',
+    weather: 'Tropical',
+    mood: ['Relax', 'Nature', 'Culture'],
+    bestSeason: 'Winter',
+    category: 'Warm & Tropical Beach Paradise',
     places: [
       {
         name: 'Mysore Palace',
@@ -273,6 +289,10 @@ const indianStatesData = [
     name: 'Kerala',
     description: "God's Own Country with backwaters, beaches, and spice plantations",
     image: 'https://images.unsplash.com/photo-1593693397690-362cb9666fc2',
+    weather: 'Tropical',
+    mood: ['Relax', 'Nature', 'Romantic'],
+    bestSeason: 'Winter',
+    category: 'Warm & Tropical Beach Paradise',
     places: [
       {
         name: 'Alleppey Backwaters',
@@ -335,6 +355,10 @@ const indianStatesData = [
     name: 'West Bengal',
     description: 'Cultural capital with colonial architecture, tea gardens, and literary heritage',
     image: 'https://images.unsplash.com/photo-1721818218431-0968074eabd4',
+    weather: 'Mixed',
+    mood: ['Spiritual', 'Culture', 'Photography'],
+    bestSeason: 'Winter',
+    category: 'Spiritual & Cultural Heartland',
     places: [
       {
         name: 'Victoria Memorial',
@@ -397,6 +421,10 @@ const indianStatesData = [
     name: 'Goa',
     description: 'Beach paradise with Portuguese heritage and vibrant nightlife',
     image: 'https://images.unsplash.com/photo-1663848018507-accf7c6a2ebb',
+    weather: 'Tropical',
+    mood: ['Relax', 'Party', 'Romantic'],
+    bestSeason: 'Winter',
+    category: 'Warm & Tropical Beach Paradise',
     places: [
       {
         name: 'Baga Beach',
@@ -459,6 +487,10 @@ const indianStatesData = [
     name: 'Gujarat',
     description: 'Land of Gandhi with vibrant culture, white desert, and Asiatic lions',
     image: 'https://images.unsplash.com/photo-1690786648154-bc52fe4f642d',
+    weather: 'Hot',
+    mood: ['Culture', 'Adventure', 'Spiritual'],
+    bestSeason: 'Winter',
+    category: 'Hot & Sunny Destinations',
     places: [
       {
         name: 'Rann of Kutch',
@@ -521,6 +553,10 @@ const indianStatesData = [
     name: 'Punjab',
     description: 'Land of five rivers with golden temple, vibrant culture, and warmth',
     image: 'https://images.unsplash.com/photo-1689141082367-df7bd06c4eab',
+    weather: 'Mixed',
+    mood: ['Spiritual', 'Culture', 'Food'],
+    bestSeason: 'Winter',
+    category: 'Spiritual & Cultural Heartland',
     places: [
       {
         name: 'Golden Temple',
@@ -583,6 +619,10 @@ const indianStatesData = [
     name: 'Tamil Nadu',
     description: 'Ancient temples, classical arts, and rich Dravidian heritage',
     image: 'https://images.unsplash.com/photo-1660122405026-02206229acc5',
+    weather: 'Hot',
+    mood: ['Spiritual', 'Culture', 'Photography'],
+    bestSeason: 'Winter',
+    category: 'Hot & Sunny Destinations',
     places: [
       {
         name: 'Meenakshi Temple',
@@ -645,6 +685,10 @@ const indianStatesData = [
     name: 'Telangana',
     description: 'Tech hub with historic monuments, pearl markets, and biryani culture',
     image: 'https://images.unsplash.com/photo-1657981630164-769503f3a9a8',
+    weather: 'Hot',
+    mood: ['Culture', 'Food', 'Photography'],
+    bestSeason: 'Winter',
+    category: 'Hot & Sunny Destinations',
     places: [
       {
         name: 'Charminar',
@@ -708,6 +752,10 @@ const indianStatesData = [
     name: 'Andhra Pradesh',
     description: 'Coastal state known for temples and spicy cuisine',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Hot',
+    mood: ['Spiritual', 'Food'],
+    bestSeason: 'Winter',
+    category: 'Hot & Sunny Destinations',
     places: [
       {
         name: 'Tirupati Balaji Temple',
@@ -730,6 +778,10 @@ const indianStatesData = [
     name: 'Arunachal Pradesh',
     description: 'Easternmost state with monasteries and mountains',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Cold',
+    mood: ['Nature', 'Adventure', 'Spiritual'],
+    bestSeason: 'Summer',
+    category: 'Cool Hill Stations & Mountains',
     places: [
       {
         name: 'Tawang Monastery',
@@ -752,6 +804,10 @@ const indianStatesData = [
     name: 'Assam',
     description: 'Land of tea gardens and wildlife',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Rainy',
+    mood: ['Nature', 'Adventure', 'Romantic'],
+    bestSeason: 'Monsoon',
+    category: 'Green Monsoon & Waterfall Zones',
     places: [
       {
         name: 'Kaziranga National Park',
@@ -774,6 +830,10 @@ const indianStatesData = [
     name: 'Bihar',
     description: 'Ancient land of Buddhism and education',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Mixed',
+    mood: ['Spiritual', 'Culture'],
+    bestSeason: 'Winter',
+    category: 'Spiritual & Cultural Heartland',
     places: [
       {
         name: 'Bodh Gaya',
@@ -796,6 +856,10 @@ const indianStatesData = [
     name: 'Chhattisgarh',
     description: 'Tribal heartland with forests and waterfalls',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Dry',
+    mood: ['Adventure', 'Nature', 'Culture'],
+    bestSeason: 'Winter',
+    category: 'Dry & Adventure Regions',
     places: [
       {
         name: 'Chitrakote Falls',
@@ -818,6 +882,10 @@ const indianStatesData = [
     name: 'Haryana',
     description: 'Agricultural and industrial state near Delhi',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Mixed',
+    mood: ['Spiritual', 'Culture'],
+    bestSeason: 'Winter',
+    category: 'Spiritual & Cultural Heartland',
     places: [
       {
         name: 'Kurukshetra',
@@ -840,6 +908,10 @@ const indianStatesData = [
     name: 'Himachal Pradesh',
     description: 'Mountain state with hill stations',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Cold',
+    mood: ['Nature', 'Adventure', 'Romantic'],
+    bestSeason: 'Summer',
+    category: 'Cool Hill Stations & Mountains',
     places: [
       {
         name: 'Manali',
@@ -862,6 +934,10 @@ const indianStatesData = [
     name: 'Jharkhand',
     description: 'State of waterfalls and forests',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Dry',
+    mood: ['Adventure', 'Nature', 'Culture'],
+    bestSeason: 'Winter',
+    category: 'Dry & Adventure Regions',
     places: [
       {
         name: 'Hundru Falls',
@@ -880,32 +956,40 @@ const indianStatesData = [
     ]
   },
   {
-      id: 'ladakh',
-      name: 'Ladakh',
-      description: 'High-altitude desert and monasteries',
-      image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
-      places: [
-        {
-          name: 'Pangong Lake',
-          description: 'High-altitude blue lake',
-          image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=400',
-          ticketPrice: { indian: 'Free', foreigner: 'Free' },
-          guideContact: '+91-9000000801'
-        },
-        {
-          name: 'Leh Palace',
-          description: 'Historic royal palace',
-          image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=400',
-          ticketPrice: { indian: '₹20', foreigner: '₹100' },
-          guideContact: '+91-9000000802'
-        }
-      ]
-    },
+    id: 'ladakh',
+    name: 'Ladakh',
+    description: 'High-altitude desert and monasteries',
+    image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Cold',
+    mood: ['Nature', 'Adventure', 'Spiritual'],
+    bestSeason: 'Summer',
+    category: 'Cool Hill Stations & Mountains',
+    places: [
+      {
+        name: 'Pangong Lake',
+        description: 'High-altitude blue lake',
+        image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=400',
+        ticketPrice: { indian: 'Free', foreigner: 'Free' },
+        guideContact: '+91-9000000801'
+      },
+      {
+        name: 'Leh Palace',
+        description: 'Historic royal palace',
+        image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=400',
+        ticketPrice: { indian: '₹20', foreigner: '₹100' },
+        guideContact: '+91-9000000802'
+      }
+    ]
+  },
   {
     id: 'madhya-pradesh',
     name: 'Madhya Pradesh',
     description: 'Heart of India with wildlife and ancient temples',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Dry',
+    mood: ['Adventure', 'Nature', 'Culture'],
+    bestSeason: 'Winter',
+    category: 'Dry & Adventure Regions',
     places: [
       {
         name: 'Khajuraho Temples',
@@ -928,6 +1012,10 @@ const indianStatesData = [
     name: 'Manipur',
     description: 'Jewel of India with lakes and dance culture',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Rainy',
+    mood: ['Nature', 'Culture', 'Romantic'],
+    bestSeason: 'Monsoon',
+    category: 'Green Monsoon & Waterfall Zones',
     places: [
       {
         name: 'Loktak Lake',
@@ -950,6 +1038,10 @@ const indianStatesData = [
     name: 'Meghalaya',
     description: 'Abode of clouds with waterfalls and caves',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Rainy',
+    mood: ['Nature', 'Adventure', 'Romantic'],
+    bestSeason: 'Monsoon',
+    category: 'Green Monsoon & Waterfall Zones',
     places: [
       {
         name: 'Living Root Bridges',
@@ -972,6 +1064,10 @@ const indianStatesData = [
     name: 'Mizoram',
     description: 'Hilly state with peaceful lifestyle',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Rainy',
+    mood: ['Nature', 'Relax', 'Culture'],
+    bestSeason: 'Monsoon',
+    category: 'Green Monsoon & Waterfall Zones',
     places: [
       {
         name: 'Vantawng Falls',
@@ -994,6 +1090,10 @@ const indianStatesData = [
     name: 'Nagaland',
     description: 'Tribal culture and hornbill festival',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Cold',
+    mood: ['Culture', 'Adventure', 'Nature'],
+    bestSeason: 'Summer',
+    category: 'Cool Hill Stations & Mountains',
     places: [
       {
         name: 'Kohima War Cemetery',
@@ -1016,6 +1116,10 @@ const indianStatesData = [
     name: 'Odisha',
     description: 'Temple architecture and coastal heritage',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Dry',
+    mood: ['Spiritual', 'Culture', 'Adventure'],
+    bestSeason: 'Winter',
+    category: 'Dry & Adventure Regions',
     places: [
       {
         name: 'Konark Sun Temple',
@@ -1038,6 +1142,10 @@ const indianStatesData = [
     name: 'Sikkim',
     description: 'Himalayan state with monasteries',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Cold',
+    mood: ['Nature', 'Adventure', 'Spiritual'],
+    bestSeason: 'Summer',
+    category: 'Cool Hill Stations & Mountains',
     places: [
       {
         name: 'Nathula Pass',
@@ -1060,6 +1168,10 @@ const indianStatesData = [
     name: 'Tripura',
     description: 'Royal palaces and tribal heritage',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Rainy',
+    mood: ['Culture', 'Nature', 'History'],
+    bestSeason: 'Monsoon',
+    category: 'Green Monsoon & Waterfall Zones',
     places: [
       {
         name: 'Ujjayanta Palace',
@@ -1082,6 +1194,10 @@ const indianStatesData = [
     name: 'Uttarakhand',
     description: 'Dev Bhoomi with Himalayan temples',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Cold',
+    mood: ['Nature', 'Adventure', 'Spiritual'],
+    bestSeason: 'Summer',
+    category: 'Cool Hill Stations & Mountains',
     places: [
       {
         name: 'Kedarnath Temple',
@@ -1104,6 +1220,10 @@ const indianStatesData = [
     name: 'Andaman & Nicobar Islands',
     description: 'Pristine islands and coral reefs',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Tropical',
+    mood: ['Relax', 'Adventure', 'Romantic'],
+    bestSeason: 'Winter',
+    category: 'Warm & Tropical Beach Paradise',
     places: [
       {
         name: 'Radhanagar Beach',
@@ -1126,6 +1246,10 @@ const indianStatesData = [
     name: 'Chandigarh',
     description: 'Planned city and capital of Punjab & Haryana',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Mixed',
+    mood: ['Culture', 'Relax'],
+    bestSeason: 'Winter',
+    category: 'Spiritual & Cultural Heartland',
     places: [
       {
         name: 'Rock Garden',
@@ -1151,6 +1275,10 @@ const koreanProvincesData = [
     name: 'Seoul',
     description: 'Dynamic capital blending ancient palaces with modern skyscrapers',
     image: 'https://images.unsplash.com/photo-1538681105587-85640961bf8f',
+    weather: 'Mixed',
+    mood: ['Culture', 'Food', 'Party', 'Photography'], // Added Photography
+    bestSeason: 'Spring/Fall',
+    category: 'Vibrant Cities',
     places: [
       {
         name: 'Gyeongbokgung Palace',
@@ -1217,6 +1345,10 @@ const koreanProvincesData = [
     name: 'Busan',
     description: 'Coastal city with beaches, mountains, and vibrant seafood markets',
     image: 'https://images.unsplash.com/photo-1579878113289-28c4a4f6871e',
+    weather: 'Tropical',
+    mood: ['Relax', 'Food', 'Nature', 'Spiritual', 'Photography'], // Added Spiritual, Photography
+    bestSeason: 'Summer',
+    category: 'Coastal & Beach Destinations',
     places: [
       {
         name: 'Haedong Yonggungsa Temple',
@@ -1279,6 +1411,10 @@ const koreanProvincesData = [
     name: 'Jeju Island',
     description: 'Volcanic island paradise with unique culture and natural beauty',
     image: 'https://images.unsplash.com/photo-1583251046894-6e99aaa3902d',
+    weather: 'Tropical',
+    mood: ['Nature', 'Relax', 'Adventure', 'Romantic', 'Photography'], // Added Romantic, Photography
+    bestSeason: 'Spring/Fall',
+    category: 'Natural Wonders & Islands',
     places: [
       {
         name: 'Hallasan Mountain',
@@ -1341,6 +1477,10 @@ const koreanProvincesData = [
     name: 'Incheon',
     description: 'Major port city and international gateway near Seoul',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Mixed',
+    mood: ['Culture', 'Food'],
+    bestSeason: 'Spring/Fall',
+    category: 'Vibrant Cities',
     places: [
       {
         name: 'Incheon Chinatown',
@@ -1371,6 +1511,10 @@ const koreanProvincesData = [
     name: 'Daegu',
     description: 'Textile and fashion hub with hot summers',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Hot',
+    mood: ['Culture', 'Food'],
+    bestSeason: 'Summer',
+    category: 'Vibrant Cities',
     places: [
       {
         name: 'Apsan Park',
@@ -1401,6 +1545,10 @@ const koreanProvincesData = [
     name: 'Daejeon',
     description: 'Science and research capital of South Korea',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Mixed',
+    mood: ['Culture', 'Adventure'],
+    bestSeason: 'Spring/Fall',
+    category: 'Vibrant Cities',
     places: [
       {
         name: 'Expo Science Park',
@@ -1431,6 +1579,10 @@ const koreanProvincesData = [
     name: 'Gwangju',
     description: 'City of democracy, art, and history',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Mixed',
+    mood: ['Culture', 'History'],
+    bestSeason: 'Spring/Fall',
+    category: 'Vibrant Cities',
     places: [
       {
         name: 'May 18 Memorial Park',
@@ -1442,7 +1594,7 @@ const koreanProvincesData = [
       {
         name: 'Asia Culture Center',
         description: 'Modern art and cultural complex',
-        image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=400',
+        image: 'https://images.unsplash.com/photo-1500530855697-b855697-b586d89ba3ee?w=400',
         ticketPrice: { indian: 'Free', foreigner: 'Free' },
         guideContact: '+82-10-4000-4002'
       }
@@ -1461,6 +1613,10 @@ const koreanProvincesData = [
     name: 'Gyeonggi-do',
     description: 'Province surrounding Seoul with historic fortresses and theme parks',
     image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+    weather: 'Mixed',
+    mood: ['Culture', 'Adventure', 'Party'],
+    bestSeason: 'Spring/Fall',
+    category: 'Vibrant Cities',
     places: [
       {
         name: 'Suwon Hwaseong Fortress',
