@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { HelmetProvider } from 'react-helmet-async'
 import { Header } from './components/Header'
 import { ScrollToTop } from './components/scrollTop'
 import { AuthProvider } from './context/AuthContext'
@@ -19,28 +20,30 @@ import { GroupChatPage } from './components/GroupChatPage'
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <ScrollToTop />
-        <div className="min-h-screen bg-gray-50">
-          <Header />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/tourism" element={<TourismPage />} />
-            <Route path="/tourism/:region/:stateId" element={<StateDetailPage />} />
-            <Route path="/office-culture" element={<OfficeCulturePage />} />
-            <Route path="/chatbot" element={<ChatbotPage />} />
-            <Route path="/community" element={<CommunityPage />} />
-            <Route path="/community/room/:roomId" element={<RoomPage />} />
-            <Route path="/private-chat/:privateChatId" element={<PrivateChatPage />} />
-            <Route path="/group-chat/:chatId" element={<GroupChatPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/faq" element={<FAQPage />} />
-            <Route path="/admin/blog/:region/:stateId" element={<AdminBlogEditor />} />
-          </Routes>
-        </div>
-      </Router>
-    </AuthProvider>
+    <HelmetProvider>
+      <AuthProvider>
+        <Router>
+          <ScrollToTop />
+          <div className="min-h-screen bg-gray-50">
+            <Header />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/tourism" element={<TourismPage />} />
+              <Route path="/tourism/:region/:stateId" element={<StateDetailPage />} />
+              <Route path="/office-culture" element={<OfficeCulturePage />} />
+              <Route path="/chatbot" element={<ChatbotPage />} />
+              <Route path="/community" element={<CommunityPage />} />
+              <Route path="/community/room/:roomId" element={<RoomPage />} />
+              <Route path="/private-chat/:privateChatId" element={<PrivateChatPage />} />
+              <Route path="/group-chat/:chatId" element={<GroupChatPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/faq" element={<FAQPage />} />
+              <Route path="/admin/blog/:region/:stateId" element={<AdminBlogEditor />} />
+            </Routes>
+          </div>
+        </Router>
+      </AuthProvider>
+    </HelmetProvider>
   )
 }

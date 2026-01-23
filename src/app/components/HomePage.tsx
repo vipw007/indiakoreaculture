@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 import { Globe, Building2, MessageCircle, Users, ArrowRight, Heart, ShieldCheck, Sparkles, MapPin, Mail, HelpCircle } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
@@ -45,6 +46,10 @@ export function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <Helmet>
+        <title>IndoKorean - Bridging Cultures Between India and Korea</title>
+        <meta name="description" content="Explore cultural guides, navigate workplace differences, and connect with a community of learners. Your one-stop platform for all things India and Korea." />
+      </Helmet>
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">

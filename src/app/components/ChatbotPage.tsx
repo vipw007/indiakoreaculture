@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Send, User, Bot } from 'lucide-react';
 
 interface Message {
@@ -142,6 +143,10 @@ export function ChatbotPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Helmet>
+        <title>Chat with Vivek & Mr. Yu - AI Cultural Guides | IndoKorean</title>
+        <meta name="description" content="Get instant answers to your cultural questions about India and Korea from our AI-powered guides, Vivek and Mr. Yu." />
+      </Helmet>
       <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl mb-4">Ask Vivek & Mr. Yu</h1>
