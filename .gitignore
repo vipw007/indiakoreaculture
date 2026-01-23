@@ -11,6 +11,7 @@
 node_modules/
 /.idea/
 .env
+.env.development
 .env.development.local
 # Firebase service account key
 /scripts/serviceAccountKey.json
