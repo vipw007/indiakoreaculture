@@ -5,9 +5,6 @@ import { StateData } from '../data/statesData';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { getCache, setCache } from '../data/cache';
 
-// --- DEBUGGING LINE ---
-console.log("VITE_API_BASE_URL:", import.meta.env.VITE_API_BASE_URL);
-
 // Use Vite's syntax for environment variables
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://us-central1-indokorean.cloudfunctions.net';
 
