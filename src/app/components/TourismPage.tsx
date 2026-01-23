@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { MapPin, ArrowRight, Globe } from 'lucide-react';
 import { StateData } from '../data/statesData';
 import { ImageWithFallback } from './figma/ImageWithFallback';
@@ -83,8 +84,17 @@ export function TourismPage() {
   const flag = selectedRegion === 'india' ? '🇮🇳' : '🇰🇷';
   const country = selectedRegion === 'india' ? 'India' : 'South Korea';
 
+  const pageTitle = `Tourism & Culture in ${country} | IndoKorean`;
+  const pageDescription = selectedRegion === 'india'
+    ? "Explore Indian states with comprehensive guides on places to visit, local food, cultural norms, and essential do's and don'ts."
+    : 'Discover Korean provinces with detailed information on attractions, cuisine, cultural etiquette, and travel tips.';
+
   return (
     <div className="min-h-screen bg-gray-50">
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+      </Helmet>
       <div className="bg-gradient-to-r from-orange-500 to-pink-500 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-6">
@@ -117,9 +127,7 @@ export function TourismPage() {
           </div>
           
           <p className="text-xl text-orange-100 max-w-3xl text-center md:text-left">
-            {selectedRegion === 'india'
-              ? "Explore Indian states with comprehensive guides on places to visit, local food, cultural norms, and essential do's and don'ts"
-              : 'Discover Korean provinces with detailed information on attractions, cuisine, cultural etiquette, and travel tips'}
+            {pageDescription}
           </p>
           
           <div className="mt-8">

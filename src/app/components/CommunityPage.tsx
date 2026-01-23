@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { db, auth } from '../firebase'; // Import auth
 import { collection, getDocs, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
 import { Users, Calendar, MessageSquare, Video, Shield, TrendingUp, Mic, Video as VideoIcon, PlusCircle, LogIn } from 'lucide-react';
@@ -155,6 +156,10 @@ export function CommunityPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Helmet>
+        <title>Community Connection - Chat & Sessions | IndoKorean</title>
+        <meta name="description" content="Join topic-based chat rooms, create private groups, and connect with others through audio and video calls to discuss Indian and Korean culture." />
+      </Helmet>
       <div className="bg-gradient-to-r from-green-600 to-teal-600 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3 mb-4">

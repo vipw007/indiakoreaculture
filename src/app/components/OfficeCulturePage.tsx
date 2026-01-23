@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Building2, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface Scenario {
@@ -108,6 +109,10 @@ export function OfficeCulturePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Helmet>
+        <title>Office & Professional Culture Guide - India vs. Korea | IndoKorean</title>
+        <meta name="description" content="Navigate workplace differences between India and Korea with practical scenarios, explanations, and safe actions for every situation." />
+      </Helmet>
       <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3 mb-4">

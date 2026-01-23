@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, updateProfile, signOut } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
 import { useNavigate } from 'react-router-dom';
@@ -62,8 +63,17 @@ export function LoginPage() {
     }
   };
 
+  const pageTitle = isLogin ? 'Sign In | IndoKorean' : 'Sign Up | IndoKorean';
+  const pageDescription = isLogin 
+    ? 'Sign in to your IndoKorean account to access community features and save your progress.'
+    : 'Create a new account to join the IndoKorean community and start exploring Indian and Korean culture.';
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+      </Helmet>
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">

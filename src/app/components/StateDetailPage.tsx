@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { ArrowLeft, MapPin, Utensils, Users, CheckCircle, XCircle, MessageSquare, Shirt, Ticket, Phone, BookOpen } from 'lucide-react';
 import { StateData } from '../data/statesData';
 import { ImageWithFallback } from './figma/ImageWithFallback';
@@ -106,6 +107,10 @@ export function StateDetailPage() {
   if (!state) {
     return (
       <div className="min-h-screen flex items-center justify-center">
+        <Helmet>
+          <title>State Not Found | IndoKorean</title>
+          <meta name="description" content="The requested state or province could not be found." />
+        </Helmet>
         <div className="text-center">
           <h2 className="text-2xl mb-4 text-gray-900">
             State not found
@@ -118,8 +123,15 @@ export function StateDetailPage() {
     );
   }
 
+  const pageTitle = `${state.name} Tourism & Culture Guide | IndoKorean`;
+  const pageDescription = `Your complete guide to visiting ${state.name}. Find the best places to see, what to eat, and important cultural tips for your trip to ${state.name}.`;
+
   return (
     <div className="min-h-screen bg-gray-50">
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+      </Helmet>
       {/* Header */}
       <div className="relative h-96">
         <ImageWithFallback src={state.image} alt={state.name} className="w-full h-full object-cover" />

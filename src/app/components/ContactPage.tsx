@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Mail, Phone, Send } from 'lucide-react';
 
 export function ContactPage() {
@@ -18,6 +19,10 @@ export function ContactPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <Helmet>
+        <title>Contact Us | IndoKorean</title>
+        <meta name="description" content="Have questions or feedback? Contact IndoKorean for support, inquiries, or to share your cultural experiences between India and Korea." />
+      </Helmet>
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Contact Us</h1>

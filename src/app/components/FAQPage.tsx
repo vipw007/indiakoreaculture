@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 export function FAQPage() {
@@ -29,6 +30,10 @@ export function FAQPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <Helmet>
+        <title>Frequently Asked Questions | IndoKorean</title>
+        <meta name="description" content="Find answers to common questions about IndoKorean, our cultural guides, community features, and services bridging India and Korea." />
+      </Helmet>
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h1>
