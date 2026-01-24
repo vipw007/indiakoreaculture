@@ -146,12 +146,7 @@ const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, o
     return () => {
       isMounted = false;
       subscriptions.forEach(sub => sub());
-      if (pc.current) {
-        pc.current.close();
-      }
-      if (localStream) {
-        localStream.getTracks().forEach(track => track.stop());
-      }
+      hangUp(true);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -169,7 +164,7 @@ const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, o
   }, [remoteStream]);
 
 
-  const hangUp = async () => {
+  const hangUp = async (isCleanup: boolean = false) => {
     if (pc.current) {
         pc.current.close();
     }
@@ -182,7 +177,8 @@ const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, o
 
     if (callIdRef.current) {
         const callDocRef = doc(db, 'calls', callIdRef.current);
-        if ((await getDoc(callDocRef)).exists()) {
+        const callDoc = await getDoc(callDocRef);
+        if (callDoc.exists() && callDoc.data().callerId === auth.currentUser?.uid) {
           const offerCandidates = collection(callDocRef, 'offerCandidates');
           const answerCandidates = collection(callDocRef, 'answerCandidates');
           
@@ -192,7 +188,9 @@ const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, o
           deleteDoc(callDocRef);
         }
       }
-    onClose();
+    if (!isCleanup) {
+        onClose();
+    }
   };
 
   const handleToggleMute = () => {
@@ -258,7 +256,7 @@ const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, o
                 {isCameraOff ? 'Camera On' : 'Camera Off'}
               </button>
             )}
-            <button onClick={hangUp} className="px-4 py-2 rounded bg-red-500 text-white">
+            <button onClick={() => hangUp()} className="px-4 py-2 rounded bg-red-500 text-white">
               Hang Up
             </button>
           </div>
