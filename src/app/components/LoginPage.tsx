@@ -14,6 +14,9 @@ export function LoginPage() {
   const [successMessage, setSuccessMessage] = useState(''); // To notify user
   const navigate = useNavigate();
 
+  // Check if running in the local emulator environment
+  const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -40,7 +43,11 @@ export function LoginPage() {
           await updateProfile(userCredential.user, {
             displayName: name,
           });
-          await signOut(auth); // Sign out the user immediately after creation
+          // In local dev, we might want to sign in immediately.
+          // For prod, signing out is a good security practice.
+          if (!isLocalhost) {
+            await signOut(auth);
+          }
         }
         // Switch to login view and show a success message
         setIsLogin(true);
@@ -60,6 +67,28 @@ export function LoginPage() {
       navigate('/');
     } catch (err: any) {
       setError(err.message);
+    }
+  };
+
+  const handleTestUserLogin = async () => {
+    try {
+      // Use a pre-defined test user for the emulator
+      await signInWithEmailAndPassword(auth, 'test@example.com', 'password');
+      navigate('/');
+    } catch (err: any) {
+      // If the test user doesn't exist, create it first
+      if (err.code === 'auth/user-not-found') {
+        try {
+          await createUserWithEmailAndPassword(auth, 'test@example.com', 'password');
+          // Now, try signing in again
+          await signInWithEmailAndPassword(auth, 'test@example.com', 'password');
+          navigate('/');
+        } catch (creationError: any) {
+          setError(`Failed to create test user: ${creationError.message}`);
+        }
+      } else {
+        setError(err.message);
+      }
     }
   };
 
@@ -159,26 +188,36 @@ export function LoginPage() {
           </div>
 
           <div>
-            <button
-              type="button"
-              onClick={handleGoogleLogin}
-              className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clipPath="url(#clip0_105_173)">
-                <path d="M23.52 12.29C23.52 11.48 23.45 10.81 23.33 10.19H12V14.6H18.52C18.24 16.01 17.32 17.21 16.03 18.03V21.03H20.03C22.33 19.09 23.52 16.05 23.52 12.29Z" fill="#4285F4"/>
-                <path d="M12 24C15.24 24 17.91 22.9 19.88 21.03L15.88 18.03C14.77 18.76 13.46 19.21 12 19.21C9.09 19.21 6.61 17.29 5.72 14.69H1.52V17.69C3.29 21.09 7.37 24 12 24Z" fill="#34A853"/>
-                <path d="M5.72 14.69C5.5 14.01 5.38 13.36 5.38 12.69C5.38 12.02 5.5 11.37 5.72 10.69V7.69H1.52C0.73 9.21 0.29 10.89 0.29 12.69C0.29 14.49 0.73 16.17 1.52 17.69L5.72 14.69Z" fill="#FBBC04"/>
-                <path d="M12 4.79C13.78 4.79 15.09 5.52 15.88 6.26L20.03 2.29C17.91 0.85 15.24 0 12 0C7.37 0 3.29 2.91 1.52 6.29L5.72 9.29C6.61 6.69 9.09 4.79 12 4.79Z" fill="#EA4335"/>
-                </g>
-                <defs>
-                <clipPath id="clip0_105_173">
-                <rect width="24" height="24" fill="white"/>
-                </clipPath>
-                </defs>
-              </svg>
-              Sign in with Google
-            </button>
+            {isLocalhost ? (
+              <button
+                type="button"
+                onClick={handleTestUserLogin}
+                className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-yellow-200 hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Sign in as Test User (Emulator)
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleGoogleLogin}
+                className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clipPath="url(#clip0_105_173)">
+                  <path d="M23.52 12.29C23.52 11.48 23.45 10.81 23.33 10.19H12V14.6H18.52C18.24 16.01 17.32 17.21 16.03 18.03V21.03H20.03C22.33 19.09 23.52 16.05 23.52 12.29Z" fill="#4285F4"/>
+                  <path d="M12 24C15.24 24 17.91 22.9 19.88 21.03L15.88 18.03C14.77 18.76 13.46 19.21 12 19.21C9.09 19.21 6.61 17.29 5.72 14.69H1.52V17.69C3.29 21.09 7.37 24 12 24Z" fill="#34A853"/>
+                  <path d="M5.72 14.69C5.5 14.01 5.38 13.36 5.38 12.69C5.38 12.02 5.5 11.37 5.72 10.69V7.69H1.52C0.73 9.21 0.29 10.89 0.29 12.69C0.29 14.49 0.73 16.17 1.52 17.69L5.72 14.69Z" fill="#FBBC04"/>
+                  <path d="M12 4.79C13.78 4.79 15.09 5.52 15.88 6.26L20.03 2.29C17.91 0.85 15.24 0 12 0C7.37 0 3.29 2.91 1.52 6.29L5.72 9.29C6.61 6.69 9.09 4.79 12 4.79Z" fill="#EA4335"/>
+                  </g>
+                  <defs>
+                  <clipPath id="clip0_105_173">
+                  <rect width="24" height="24" fill="white"/>
+                  </clipPath>
+                  </defs>
+                </svg>
+                Sign in with Google
+              </button>
+            )}
           </div>
           
           <div className="text-center">
