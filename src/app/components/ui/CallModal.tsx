@@ -94,6 +94,7 @@ const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, o
     const startCall = async (pcInstance: RTCPeerConnection, uid: string) => {
       const callDocRef = doc(collection(db, 'calls'));
       callIdRef.current = callDocRef.id;
+      const queuedCandidates: RTCIceCandidateInit[] = [];
 
       pcInstance.onicecandidate = (event) => {
         if (event.candidate) addDoc(collection(callDocRef, 'offerCandidates'), event.candidate.toJSON());
@@ -105,16 +106,25 @@ const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, o
       await setDoc(callDocRef, { offer: { sdp: offerDescription.sdp, type: offerDescription.type }, callerId: uid, callType });
       onNewCallId(callDocRef.id);
 
-      subscriptions.push(onSnapshot(callDocRef, (snapshot) => {
+      subscriptions.push(onSnapshot(callDocRef, async (snapshot) => {
         const data = snapshot.data();
         if (!pcInstance.currentRemoteDescription && data?.answer) {
-          pcInstance.setRemoteDescription(new RTCSessionDescription(data.answer));
+          await pcInstance.setRemoteDescription(new RTCSessionDescription(data.answer));
+          queuedCandidates.forEach(candidate => pcInstance.addIceCandidate(new RTCIceCandidate(candidate)));
+          queuedCandidates.length = 0;
         }
       }));
 
       subscriptions.push(onSnapshot(collection(callDocRef, 'answerCandidates'), (snapshot) => {
         snapshot.docChanges().forEach((change) => {
-          if (change.type === 'added') pcInstance.addIceCandidate(new RTCIceCandidate(change.doc.data()));
+          if (change.type === 'added') {
+            const candidate = change.doc.data();
+            if (pcInstance.currentRemoteDescription) {
+              pcInstance.addIceCandidate(new RTCIceCandidate(candidate));
+            } else {
+              queuedCandidates.push(candidate);
+            }
+          }
         });
       }));
     };
@@ -123,6 +133,7 @@ const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, o
       const callDocRef = doc(db, 'calls', callId);
       const callDoc = await getDoc(callDocRef);
       if (!callDoc.exists()) throw new Error("Call document does not exist!");
+      const queuedCandidates: RTCIceCandidateInit[] = [];
 
       pcInstance.onicecandidate = (event) => {
         if (event.candidate) addDoc(collection(callDocRef, 'answerCandidates'), event.candidate.toJSON());
@@ -136,7 +147,14 @@ const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, o
 
       subscriptions.push(onSnapshot(collection(callDocRef, 'offerCandidates'), (snapshot) => {
         snapshot.docChanges().forEach((change) => {
-          if (change.type === 'added') pcInstance.addIceCandidate(new RTCIceCandidate(change.doc.data()));
+          if (change.type === 'added') {
+            const candidate = change.doc.data();
+            if (pcInstance.remoteDescription) { // Check if remote description is set
+              pcInstance.addIceCandidate(new RTCIceCandidate(candidate));
+            } else {
+              queuedCandidates.push(candidate);
+            }
+          }
         });
       }));
     };
@@ -146,7 +164,12 @@ const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, o
     return () => {
       isMounted = false;
       subscriptions.forEach(sub => sub());
-      hangUp(true);
+      if (pc.current) {
+        pc.current.close();
+      }
+      if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -164,7 +187,7 @@ const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, o
   }, [remoteStream]);
 
 
-  const hangUp = async (isCleanup: boolean = false) => {
+  const hangUp = async () => {
     if (pc.current) {
         pc.current.close();
     }
@@ -188,9 +211,7 @@ const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, o
           deleteDoc(callDocRef);
         }
       }
-    if (!isCleanup) {
-        onClose();
-    }
+    onClose();
   };
 
   const handleToggleMute = () => {

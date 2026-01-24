@@ -67,6 +67,7 @@ export function PrivateChatPage() {
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const msgs = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Message));
+        console.log("Messages updated:", msgs); // Diagnostic log
         setMessages(msgs);
     });
 
