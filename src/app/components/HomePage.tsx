@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
-import { Globe, Building2, MessageCircle, Users, ArrowRight, Heart, ShieldCheck, Sparkles, MapPin, Mail, HelpCircle } from 'lucide-react';
+import { Globe, Building2, MessageCircle, Users, ArrowRight, Heart, ShieldCheck, Sparkles, MapPin, Mail, HelpCircle, FileText, Utensils } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
 export function HomePage() {
@@ -35,6 +35,20 @@ export function HomePage() {
       description: 'Join topic-based rooms for real cultural exchange with moderated Q&A and scheduled sessions.',
       link: '/community',
       image: 'https://images.unsplash.com/photo-1548115184-bc6544d06a58?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHxrb3JlYSUyMHNlb3VsfGVufDF8fHx8MTc2ODEzMjIxNXww&ixlib=rb-4.1.0&q=80&w=1080',
+    },
+    {
+      icon: FileText,
+      title: 'Visa & Doc.',
+      description: 'Get help with visa applications, documentation, and other travel requirements.',
+      link: '/visa',
+      image: 'https://images.unsplash.com/photo-1559029889-e62394173e32?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXNzcG9ydCUyMGFuZCUyMHRyYXZlbCUyMGRvY3VtZW50c3xlbnwxfHx8fDE3NjkwMjE2MjV8MA&ixlib=rb-4.1.0&q=80&w=1080',
+    },
+    {
+      icon: Utensils,
+      title: 'Exclusive Food',
+      description: 'Discover and explore exclusive food items and culinary experiences from both countries.',
+      link: '#', // Placeholder link
+      image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmb29kfGVufDF8fHx8MTc2ODg0MjM3Nnww&ixlib=rb-4.1.0&q=80&w=1080',
     },
   ];
 
@@ -122,7 +136,7 @@ export function HomePage() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature) => {
             const Icon = feature.icon;
             return (

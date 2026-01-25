@@ -17,6 +17,7 @@ import { AdminBlogEditor } from './components/AdminBlogEditor'
 import { RoomPage } from './components/RoomPage'
 import { PrivateChatPage } from './components/PrivateChatPage'
 import { GroupChatPage } from './components/GroupChatPage'
+import { VisaPage } from './components/VisaPage'
 
 export default function App() {
   return (
@@ -40,6 +41,7 @@ export default function App() {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/faq" element={<FAQPage />} />
               <Route path="/admin/blog/:region/:stateId" element={<AdminBlogEditor />} />
+              <Route path="/visa" element={<VisaPage />} />
             </Routes>
           </div>
         </Router>
