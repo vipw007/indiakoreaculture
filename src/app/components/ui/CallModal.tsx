@@ -13,6 +13,7 @@ import {
   Unsubscribe,
 } from 'firebase/firestore';
 import VolumeIndicator from './VolumeIndicator';
+import { Mic, MicOff, Video, VideoOff, PhoneOff } from 'lucide-react';
 
 interface CallModalProps {
   callId: string | null;
@@ -21,25 +22,40 @@ interface CallModalProps {
   callType: 'audio' | 'video';
 }
 
-const servers = {
-  iceServers: [
-    {
-      urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302'],
-    },
-  ],
-  iceCandidatePoolSize: 10,
+// Helper function to fetch TURN credentials from your Firebase Function
+const getIceServers = async () => {
+  const response = await fetch(
+    "https://us-central1-indokorean.cloudfunctions.net/getTurnCredentials"
+  );
+
+  const data = await response.json();
+
+  return {
+    iceServers: [
+      { urls: "stun:stun.l.google.com:19302" },
+      ...data.iceServers,
+    ],
+  };
 };
 
+
 const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, onNewCallId, callType }) => {
-  const localVideoRef = useRef<HTMLVideoElement>(null);
-  const remoteVideoRef = useRef<HTMLVideoElement>(null);
+  const mainVideoRef = useRef<HTMLVideoElement>(null);
+  const pipVideoRef = useRef<HTMLVideoElement>(null);
+  const remoteAudioRef = useRef<HTMLAudioElement>(null);
   
   const [isMuted, setIsMuted] = useState(false);
   const [isCameraOff, setIsCameraOff] = useState(callType === 'audio');
   const [permissionError, setPermissionError] = useState<string | null>(null);
+  const [status, setStatus] = useState('Connecting...');
+  const [uiVisible, setUiVisible] = useState(true);
   
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
+  
+  const [localUser, setLocalUser] = useState(auth.currentUser?.displayName || 'You');
+  const [remoteUser, setRemoteUser] = useState('Remote User');
+  const [mainView, setMainView] = useState<'remote' | 'local'>('remote');
 
   const pc = useRef<RTCPeerConnection | null>(null);
   const callIdRef = useRef<string | null>(initialCallId);
@@ -47,10 +63,21 @@ const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, o
   useEffect(() => {
     let isMounted = true;
     const subscriptions: Unsubscribe[] = [];
-    const pcInstance = new RTCPeerConnection(servers);
-    pc.current = pcInstance;
-
+    
     const setupCall = async () => {
+      const iceConfig = await getIceServers();
+      const pcInstance = new RTCPeerConnection({
+        ...iceConfig,
+        iceCandidatePoolSize: 10,
+      });
+      pc.current = pcInstance;
+
+      pcInstance.onconnectionstatechange = () => {
+          if (isMounted) {
+              setStatus(pcInstance.connectionState);
+          }
+      };
+
       try {
         const uid = auth.currentUser?.uid;
         if (!uid) throw new Error('User not authenticated');
@@ -91,9 +118,17 @@ const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, o
       }
     };
 
+    const fetchRemoteUser = async (userId: string) => {
+        const userDoc = await getDoc(doc(db, 'users', userId));
+        if (userDoc.exists() && isMounted) {
+            setRemoteUser(userDoc.data().displayName || 'Remote User');
+        }
+    };
+
     const startCall = async (pcInstance: RTCPeerConnection, uid: string) => {
       const callDocRef = doc(collection(db, 'calls'));
       callIdRef.current = callDocRef.id;
+      const queuedCandidates: RTCIceCandidateInit[] = [];
 
       pcInstance.onicecandidate = (event) => {
         if (event.candidate) addDoc(collection(callDocRef, 'offerCandidates'), event.candidate.toJSON());
@@ -105,16 +140,26 @@ const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, o
       await setDoc(callDocRef, { offer: { sdp: offerDescription.sdp, type: offerDescription.type }, callerId: uid, callType });
       onNewCallId(callDocRef.id);
 
-      subscriptions.push(onSnapshot(callDocRef, (snapshot) => {
+      subscriptions.push(onSnapshot(callDocRef, async (snapshot) => {
         const data = snapshot.data();
         if (!pcInstance.currentRemoteDescription && data?.answer) {
-          pcInstance.setRemoteDescription(new RTCSessionDescription(data.answer));
+          await pcInstance.setRemoteDescription(new RTCSessionDescription(data.answer));
+          queuedCandidates.forEach(candidate => pcInstance.addIceCandidate(new RTCIceCandidate(candidate)));
+          queuedCandidates.length = 0;
+          if (data.calleeId) fetchRemoteUser(data.calleeId);
         }
       }));
 
       subscriptions.push(onSnapshot(collection(callDocRef, 'answerCandidates'), (snapshot) => {
         snapshot.docChanges().forEach((change) => {
-          if (change.type === 'added') pcInstance.addIceCandidate(new RTCIceCandidate(change.doc.data()));
+          if (change.type === 'added') {
+            const candidate = change.doc.data();
+            if (pcInstance.currentRemoteDescription) {
+              pcInstance.addIceCandidate(new RTCIceCandidate(candidate));
+            } else {
+              queuedCandidates.push(candidate);
+            }
+          }
         });
       }));
     };
@@ -123,6 +168,9 @@ const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, o
       const callDocRef = doc(db, 'calls', callId);
       const callDoc = await getDoc(callDocRef);
       if (!callDoc.exists()) throw new Error("Call document does not exist!");
+      const queuedCandidates: RTCIceCandidateInit[] = [];
+
+      if (callDoc.data().callerId) fetchRemoteUser(callDoc.data().callerId);
 
       pcInstance.onicecandidate = (event) => {
         if (event.candidate) addDoc(collection(callDocRef, 'answerCandidates'), event.candidate.toJSON());
@@ -136,7 +184,14 @@ const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, o
 
       subscriptions.push(onSnapshot(collection(callDocRef, 'offerCandidates'), (snapshot) => {
         snapshot.docChanges().forEach((change) => {
-          if (change.type === 'added') pcInstance.addIceCandidate(new RTCIceCandidate(change.doc.data()));
+          if (change.type === 'added') {
+            const candidate = change.doc.data();
+            if (pcInstance.remoteDescription) {
+              pcInstance.addIceCandidate(new RTCIceCandidate(candidate));
+            } else {
+              queuedCandidates.push(candidate);
+            }
+          }
         });
       }));
     };
@@ -146,25 +201,34 @@ const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, o
     return () => {
       isMounted = false;
       subscriptions.forEach(sub => sub());
-      hangUp(true);
+      if (pc.current) {
+        pc.current.close();
+      }
+      if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
   useEffect(() => {
-    if (localVideoRef.current && localStream) {
-      localVideoRef.current.srcObject = localStream;
+    if (mainView === 'local') {
+        if (mainVideoRef.current) mainVideoRef.current.srcObject = localStream;
+        if (pipVideoRef.current) pipVideoRef.current.srcObject = remoteStream;
+    } else {
+        if (mainVideoRef.current) mainVideoRef.current.srcObject = remoteStream;
+        if (pipVideoRef.current) pipVideoRef.current.srcObject = localStream;
     }
-  }, [localStream]);
+  }, [localStream, remoteStream, mainView]);
 
   useEffect(() => {
-    if (remoteVideoRef.current && remoteStream) {
-      remoteVideoRef.current.srcObject = remoteStream;
+    if (remoteAudioRef.current && remoteStream) {
+      remoteAudioRef.current.srcObject = remoteStream;
     }
   }, [remoteStream]);
 
 
-  const hangUp = async (isCleanup: boolean = false) => {
+  const hangUp = async () => {
     if (pc.current) {
         pc.current.close();
     }
@@ -188,9 +252,7 @@ const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, o
           deleteDoc(callDocRef);
         }
       }
-    if (!isCleanup) {
-        onClose();
-    }
+    onClose();
   };
 
   const handleToggleMute = () => {
@@ -210,57 +272,65 @@ const CallModal: React.FC<CallModalProps> = ({ callId: initialCallId, onClose, o
     }
   };
 
+  const toggleMainView = () => {
+    setMainView(prev => prev === 'local' ? 'remote' : 'local');
+  };
+
   const isVideoCall = callType === 'video';
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-      <div className="relative bg-white rounded-lg p-4 w-full max-w-4xl">
+    <div className="fixed inset-0 bg-black z-50" onClick={() => setUiVisible(!uiVisible)}>
+      <div className="relative w-full h-full">
         {permissionError ? (
-          <div className="text-center p-8">
+          <div className="w-full h-full flex flex-col items-center justify-center text-white p-4">
             <h2 className="text-2xl font-bold text-red-600 mb-4">Permission Denied</h2>
-            <p className="text-gray-700">{permissionError}</p>
+            <p className="text-center">{permissionError}</p>
             <button onClick={onClose} className="mt-4 px-4 py-2 rounded bg-red-500 text-white">
               Close
             </button>
           </div>
         ) : isVideoCall ? (
-          <div className="grid grid-cols-2 gap-4">
-            <div className="relative">
-              <video ref={localVideoRef} autoPlay playsInline muted className="w-full h-auto rounded bg-gray-900" />
-              <p className="text-center">Local</p>
-              <VolumeIndicator stream={localStream} />
+          <>
+            {/* Main Video View */}
+            <video ref={mainVideoRef} autoPlay playsInline muted={mainView === 'local'} className="w-full h-full object-cover" />
+            
+            {/* Picture-in-Picture View */}
+            <div className="absolute top-4 right-4 w-32 h-48 md:w-48 md:h-64 rounded-lg overflow-hidden shadow-lg cursor-pointer border-2 border-white" onClick={toggleMainView}>
+                <video ref={pipVideoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
             </div>
-            <div className="relative">
-              <video ref={remoteVideoRef} autoPlay playsInline className="w-full h-auto rounded bg-gray-900" />
-              <p className="text-center">Remote</p>
-              <VolumeIndicator stream={remoteStream} />
+
+            <div className={`absolute top-4 left-4 transition-opacity duration-300 ${uiVisible ? 'opacity-100' : 'opacity-0'}`}>
+                <p className="text-white text-lg font-bold">{mainView === 'local' ? remoteUser : localUser}</p>
+                <p className="text-white capitalize">{status}</p>
             </div>
-          </div>
+          </>
         ) : (
-          <div className="text-center p-8">
-            <h2 className="text-2xl font-bold mb-4">Audio Call in Progress</h2>
-            <audio ref={remoteVideoRef} autoPlay playsInline />
-            <div className="flex justify-center items-center mt-4">
-                <p className="mr-2">Remote User:</p>
+          <div className="w-full h-full flex flex-col items-center justify-center text-white">
+            <h2 className="text-3xl font-bold mb-4">Audio Call</h2>
+            <p className="text-xl mb-4">with {remoteUser}</p>
+            <audio ref={remoteAudioRef} autoPlay playsInline />
+            <div className="flex items-center mt-4">
+                <p className="mr-2">Speaking:</p>
                 <VolumeIndicator stream={remoteStream} />
             </div>
+            <p className="mt-4 capitalize">{status}</p>
           </div>
         )}
-        {!permissionError && (
-          <div className="flex justify-center space-x-4 mt-4">
-            <button onClick={handleToggleMute} className={`px-4 py-2 rounded ${isMuted ? 'bg-yellow-500' : 'bg-gray-300'}`}>
-              {isMuted ? 'Unmute' : 'Mute'}
+        
+        {/* Controls */}
+        <div className={`absolute bottom-0 left-0 right-0 flex justify-center items-center space-x-4 p-4 bg-black bg-opacity-25 transition-opacity duration-300 ${uiVisible ? 'opacity-100' : 'opacity-0'}`}>
+          <button onClick={handleToggleMute} className={`p-4 rounded-full transition-colors ${isMuted ? 'bg-red-500 text-white' : 'bg-gray-700 text-white'}`}>
+            {isMuted ? <MicOff /> : <Mic />}
+          </button>
+          {isVideoCall && (
+            <button onClick={handleToggleCamera} className={`p-4 rounded-full transition-colors ${isCameraOff ? 'bg-red-500 text-white' : 'bg-gray-700 text-white'}`}>
+              {isCameraOff ? <VideoOff /> : <Video />}
             </button>
-            {isVideoCall && (
-              <button onClick={handleToggleCamera} className={`px-4 py-2 rounded ${isCameraOff ? 'bg-yellow-500' : 'bg-gray-300'}`}>
-                {isCameraOff ? 'Camera On' : 'Camera Off'}
-              </button>
-            )}
-            <button onClick={() => hangUp()} className="px-4 py-2 rounded bg-red-500 text-white">
-              Hang Up
-            </button>
-          </div>
-        )}
+          )}
+          <button onClick={hangUp} className="p-4 rounded-full bg-red-600 text-white hover:bg-red-700">
+            <PhoneOff />
+          </button>
+        </div>
       </div>
     </div>
   );

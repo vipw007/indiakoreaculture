@@ -17,7 +17,6 @@ service cloud.firestore {
     }
 
     // Rules for community page. Allows ANYONE to read the list of rooms and sessions.
-    // This is intentional so that non-logged-in users can see the community content.
     match /communityRooms/{documentId} {
       allow read: if true;
     }
@@ -26,37 +25,9 @@ service cloud.firestore {
     }
 
     // Rules for the 'calls' collection for WebRTC signaling
-    match /calls/{callId} {
-      // A user must be authenticated to create a call.
-      // The document must contain a 'callerId' matching the user's UID.
-      allow create: if request.auth != null && request.resource.data.callerId == request.auth.uid;
-
-      // Before a callee joins, any authenticated user can read the call document.
-      // This is a trade-off to allow the callee to get the offer without complex logic.
-      // After a callee joins, only the caller and callee can read.
-      allow read: if request.auth != null && (resource.data.calleeId == null || resource.data.callerId == request.auth.uid || resource.data.calleeId == request.auth.uid);
-
-      // A user can answer a call if they are not the caller and the call has not been answered yet.
-      // This "claims" the call for the answering user.
-      allow update: if request.auth != null && resource.data.calleeId == null && request.resource.data.calleeId == request.auth.uid && resource.data.callerId != request.auth.uid;
-
-      // The caller or the callee can delete the call document to hang up.
-      allow delete: if request.auth != null && (exists(/databases/$(database)/documents/calls/$(callId)) && (resource.data.callerId == request.auth.uid || resource.data.calleeId == request.auth.uid));
-
-      // Rules for ICE Candidates subcollections
-      match /offerCandidates/{candidateId} {
-        // The caller can create their ICE candidates.
-        allow create: if request.auth != null && exists(/databases/$(database)/documents/calls/$(callId)) && get(/databases/$(database)/documents/calls/$(callId)).data.callerId == request.auth.uid;
-        // Before a callee joins, any authenticated user can read candidates. Afterwards, only the callee can.
-        allow read: if request.auth != null && exists(/databases/$(database)/documents/calls/$(callId)) && (get(/databases/$(database)/documents/calls/$(callId)).data.calleeId == null || get(/databases/$(database)/documents/calls/$(callId)).data.calleeId == request.auth.uid);
-      }
-
-      match /answerCandidates/{candidateId} {
-        // The callee can create their ICE candidates.
-        allow create: if request.auth != null && exists(/databases/$(database)/documents/calls/$(callId)) && get(/databases/$(database)/documents/calls/$(callId)).data.calleeId == request.auth.uid;
-        // The caller can read the callee's ICE candidates.
-        allow read: if request.auth != null && exists(/databases/$(database)/documents/calls/$(callId)) && get(/databases/$(database)/documents/calls/$(callId)).data.callerId == request.auth.uid;
-      }
+    // TEMPORARY DEBUGGING RULE: Allow any authenticated user to read/write.
+    match /calls/{callId}/{document=**} {
+      allow read, write: if request.auth != null;
     }
   }
 }

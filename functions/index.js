@@ -1,6 +1,12 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const cors = require("cors")({ origin: true });
+const twilio = require("twilio");
+const { defineString } = require('firebase-functions/params');
+
+// Define secrets as parameters
+const twilioSid = defineString('TWILIO_SID');
+const twilioToken = defineString('TWILIO_TOKEN');
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -20,8 +26,6 @@ exports.getStatesList = functions.https.onRequest(async (req, res) => {
     const collectionName = region === 'india' ? 'indianStates' : 'koreanProvinces';
 
     try {
-      // Key Optimization: .select() fetches only the specified fields
-      // UPDATED: Include mood, weather, bestSeason, and category fields
       const snapshot = await db.collection(collectionName)
           .select('name', 'description', 'image', 'mood', 'weather', 'bestSeason', 'category')
           .get();
@@ -31,10 +35,10 @@ exports.getStatesList = functions.https.onRequest(async (req, res) => {
         name: doc.data().name,
         description: doc.data().description,
         image: doc.data().image,
-        mood: doc.data().mood, // Include mood
-        weather: doc.data().weather, // Include weather
-        bestSeason: doc.data().bestSeason, // Include bestSeason
-        category: doc.data().category // Include category
+        mood: doc.data().mood,
+        weather: doc.data().weather,
+        bestSeason: doc.data().bestSeason,
+        category: doc.data().category
       }));
 
       return res.status(200).json(data);
@@ -79,4 +83,24 @@ exports.getStateDetails = functions.https.onRequest(async (req, res) => {
   });
 });
 
-// The old getTourismData function is no longer needed and can be removed.
+exports.getTurnCredentials = functions.https.onRequest(
+    (req, res) => {
+      cors(req, res, async () => {
+        try {
+          const sid = twilioSid.value();
+          const token = twilioToken.value();
+    
+          const client = twilio(sid, token);
+    
+          const turnToken = await client.tokens.create();
+    
+          res.json({
+            iceServers: turnToken.iceServers,
+          });
+        } catch (error) {
+          console.error("TURN credential error:", error);
+          res.status(500).send("Failed to generate TURN credentials");
+        }
+      });
+    }
+  );
