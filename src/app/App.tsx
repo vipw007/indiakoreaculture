@@ -18,6 +18,7 @@ import { RoomPage } from './components/RoomPage'
 import { PrivateChatPage } from './components/PrivateChatPage'
 import { GroupChatPage } from './components/GroupChatPage'
 import { VisaPage } from './components/VisaPage'
+import { FoodPage } from './components/FoodPage'
 
 export default function App() {
   return (
@@ -42,6 +43,7 @@ export default function App() {
               <Route path="/faq" element={<FAQPage />} />
               <Route path="/admin/blog/:region/:stateId" element={<AdminBlogEditor />} />
               <Route path="/visa" element={<VisaPage />} />
+              <Route path="/food" element={<FoodPage />} />
             </Routes>
           </div>
         </Router>
