@@ -41,13 +41,13 @@ export function HomePage() {
       title: 'Visa & Doc.',
       description: 'Get help with visa applications, documentation, and other travel requirements.',
       link: '/visa',
-      image: 'https://images.unsplash.com/photo-1559029889-e62394173e32?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXNzcG9ydCUyMGFuZCUyMHRyYXZlbCUyMGRvY3VtZW50c3xlbnwxfHx8fDE3NjkwMjE2MjV8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      image: 'https://images.pexels.com/photos/163771/passport-travel-vacation-document-163771.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
     },
     {
       icon: Utensils,
       title: 'Exclusive Food',
       description: 'Discover and explore exclusive food items and culinary experiences from both countries.',
-      link: '#', // Placeholder link
+      link: '/food',
       image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmb29kfGVufDF8fHx8MTc2ODg0MjM3Nnww&ixlib=rb-4.1.0&q=80&w=1080',
     },
   ];
