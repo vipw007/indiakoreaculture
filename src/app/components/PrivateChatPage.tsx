@@ -67,7 +67,6 @@ export function PrivateChatPage() {
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const msgs = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Message));
-        console.log("Messages updated:", msgs); // Diagnostic log
         setMessages(msgs);
     });
 
@@ -129,15 +128,15 @@ export function PrivateChatPage() {
   };
 
   if (loading) {
-    return <div className="flex justify-center items-center h-screen">Loading private chat...</div>;
+    return <div className="fixed inset-0 z-[100] flex justify-center items-center bg-white">Loading private chat...</div>;
   }
 
   if (!privateChat) {
-    return <div className="flex justify-center items-center h-screen">Private chat not found.</div>;
+    return <div className="fixed inset-0 z-[100] flex justify-center items-center bg-white">Private chat not found.</div>;
   }
 
   return (
-    <>
+    <div className="fixed inset-0 z-[100] bg-gray-100 flex flex-col">
       {showCallModal && (
         <CallModal
           callId={activeCallId}
@@ -146,85 +145,83 @@ export function PrivateChatPage() {
           callType={activeCallType}
         />
       )}
-      <div className="flex flex-col h-screen bg-gray-100">
-          <header className="bg-white shadow-md p-4 z-10 flex items-center justify-between flex-shrink-0">
-              <div>
-                  <h1 className="text-2xl font-bold text-gray-800">{privateChat.name}</h1>
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <span>Share ID: {privateChat.id}</span>
-                      <button onClick={copyChatId} className="hover:text-teal-600" title="Copy Chat ID">
-                          <Copy size={16} />
-                      </button>
-                  </div>
-              </div>
-              <div className="flex gap-2">
-                  <button
-                      onClick={() => handleStartCall('audio')}
-                      className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600"
-                      title="Start Audio Call"
-                  >
-                      <Phone size={20} />
-                  </button>
-                  <button
-                      onClick={() => handleStartCall('video')}
-                      className="bg-purple-500 text-white p-2 rounded-full hover:bg-purple-600"
-                      title="Start Video Call"
-                  >
-                      <VideoIcon size={20} />
+      <header className="bg-white shadow-md p-4 flex items-center justify-between flex-shrink-0">
+          <div>
+              <h1 className="text-2xl font-bold text-gray-800">{privateChat.name}</h1>
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <span>Share ID: {privateChat.id}</span>
+                  <button onClick={copyChatId} className="hover:text-teal-600" title="Copy Chat ID">
+                      <Copy size={16} />
                   </button>
               </div>
-          </header>
+          </div>
+          <div className="flex gap-2">
+              <button
+                  onClick={() => handleStartCall('audio')}
+                  className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600"
+                  title="Start Audio Call"
+              >
+                  <Phone size={20} />
+              </button>
+              <button
+                  onClick={() => handleStartCall('video')}
+                  className="bg-purple-500 text-white p-2 rounded-full hover:bg-purple-600"
+                  title="Start Video Call"
+              >
+                  <VideoIcon size={20} />
+              </button>
+          </div>
+      </header>
 
-          <main ref={messagesContainerRef} className="flex-1 p-4 overflow-y-auto">
-              <div className="space-y-4">
-                  {messages.map(msg => {
-                      if (msg.type === 'call-invitation' && msg.callId) {
-                          return (
-                              <div key={msg.id} className={`flex items-start gap-3 ${msg.senderId === currentUser?.uid ? 'justify-end' : 'justify-start'}`}>
-                                  <div className="p-3 rounded-lg bg-yellow-200 text-center">
-                                      <p>{msg.text}</p>
-                                      {msg.senderId !== currentUser?.uid && (
-                                        <button
-                                            onClick={() => handleJoinCall(msg.callId!, msg.callType || 'video')}
-                                            className="mt-2 px-4 py-2 rounded bg-green-500 text-white"
-                                        >
-                                            Join Call
-                                        </button>
-                                      )}
-                                  </div>
-                              </div>
-                          );
-                      }
+      <main ref={messagesContainerRef} className="flex-1 p-4 overflow-y-auto min-h-0">
+          <div className="space-y-4">
+              {messages.map(msg => {
+                  if (msg.type === 'call-invitation' && msg.callId) {
                       return (
-                          <div key={msg.id} className={`flex items-start gap-3 ${msg.senderId === currentUser?.uid ? 'justify-end' : ''}`}>
-                              {msg.senderId !== currentUser?.uid && <div className="bg-gray-300 rounded-full h-8 w-8 flex items-center justify-center flex-shrink-0"><User size={16} /></div>}
-                              <div className={`p-3 rounded-lg max-w-lg ${msg.senderId === currentUser?.uid ? 'bg-teal-500 text-white' : 'bg-white'}`}>
-                                  <p className="font-bold text-sm">{msg.senderId === currentUser?.uid ? 'Me' : msg.sender}</p>
+                          <div key={msg.id} className={`flex items-start gap-3 ${msg.senderId === currentUser?.uid ? 'justify-end' : 'justify-start'}`}>
+                              <div className="p-3 rounded-lg bg-yellow-200 text-center">
                                   <p>{msg.text}</p>
+                                  {msg.senderId !== currentUser?.uid && (
+                                    <button
+                                        onClick={() => handleJoinCall(msg.callId!, msg.callType || 'video')}
+                                        className="mt-2 px-4 py-2 rounded bg-green-500 text-white"
+                                    >
+                                        Join Call
+                                    </button>
+                                  )}
                               </div>
-                              {msg.senderId === currentUser?.uid && <div className="bg-blue-300 rounded-full h-8 w-8 flex items-center justify-center flex-shrink-0"><User size={16} /></div>}
                           </div>
                       );
-                  })}
-              </div>
-          </main>
+                  }
+                  return (
+                      <div key={msg.id} className={`flex items-start gap-3 ${msg.senderId === currentUser?.uid ? 'justify-end' : ''}`}>
+                          {msg.senderId !== currentUser?.uid && <div className="bg-gray-300 rounded-full h-8 w-8 flex items-center justify-center flex-shrink-0"><User size={16} /></div>}
+                          <div className={`p-3 rounded-lg max-w-lg ${msg.senderId === currentUser?.uid ? 'bg-teal-500 text-white' : 'bg-white'}`}>
+                              <p className="font-bold text-sm">{msg.senderId === currentUser?.uid ? 'Me' : msg.sender}</p>
+                              <p>{msg.text}</p>
+                          </div>
+                          {msg.senderId === currentUser?.uid && <div className="bg-blue-300 rounded-full h-8 w-8 flex items-center justify-center flex-shrink-0"><User size={16} /></div>}
+                      </div>
+                  );
+              })}
+          </div>
+      </main>
 
-          <footer className="bg-white p-4 z-10 flex-shrink-0">
-              <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-                  <input
-                      type="text"
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      placeholder={currentUser ? "Type your message..." : "Please log in to chat"}
-                      className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-                      disabled={!currentUser}
-                  />
-                  <button type="submit" className="bg-teal-600 text-white p-2 rounded-lg hover:bg-teal-700 disabled:bg-gray-400" disabled={!currentUser}>
-                      <Send size={20} />
-                  </button>
-              </form>
-          </footer>
-      </div>
-    </>
+      <footer className="bg-white p-4 flex-shrink-0">
+          <form onSubmit={handleSendMessage} className="flex items-center gap-2">
+              <input
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder={currentUser ? "Type your message..." : "Please log in to chat"}
+                  className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  disabled={!currentUser}
+              />
+              <button type="submit" className="bg-teal-600 text-white p-2 rounded-lg hover:bg-teal-700 disabled:bg-gray-400" disabled={!currentUser}>
+                  <Send size={20} />
+              </button>
+          </form>
+      </footer>
+    </div>
   );
 }
