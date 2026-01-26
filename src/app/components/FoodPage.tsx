@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Flame, Leaf, UtensilsCrossed, ArrowRight } from 'lucide-react';
 import { foodComparisons, Dish } from '../data/food-data';
+import RecipeModal from './ui/RecipeModal'; // Import the new modal component
 
 // --- Sub-components ---
 
@@ -17,13 +18,16 @@ const SpiceLevel = ({ level }: { level: number }) => (
   </div>
 );
 
-const DishCard = ({ dish }: { dish: Dish }) => (
-  <div className="bg-white rounded-lg shadow-md overflow-hidden">
+const DishCard = ({ dish, onClick }: { dish: Dish; onClick: (dish: Dish) => void }) => (
+  <div
+    className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-xl transition-shadow"
+    onClick={() => onClick(dish)}
+  >
     <img src={dish.image} alt={dish.name} className="w-full h-48 object-cover" />
     <div className="p-4">
       <h3 className="text-xl font-bold mb-2 flex items-center gap-2">
         {dish.name}
-        {dish.isVeg ? <Leaf className="h-5 w-5 text-green-500" /> : null}
+        {dish.isVeg ? <Leaf className="h-5 w-5 text-green-500" title="Vegetarian" /> : null}
       </h3>
       <p className="text-sm text-gray-600 mb-3">{dish.description}</p>
       <div className="text-xs bg-gray-100 rounded-full px-2 py-1 inline-block mb-3">
@@ -45,9 +49,21 @@ export function FoodPage() {
     streetFood: false,
     spicy: false,
   });
+  const [selectedDish, setSelectedDish] = useState<Dish | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleFilterChange = (filter: keyof typeof filters) => {
     setFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
+  };
+
+  const handleDishClick = (dish: Dish) => {
+    setSelectedDish(dish);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedDish(null);
   };
 
   const filteredComparisons = foodComparisons.filter(({ india, korea }) => {
@@ -64,10 +80,12 @@ export function FoodPage() {
         <meta name="description" content="A deep dive into the flavors, traditions, and iconic dishes of India and Korea." />
       </Helmet>
 
+      {isModalOpen && <RecipeModal dish={selectedDish} onClose={handleCloseModal} />}
+
       {/* Hero Section */}
       <div className="relative h-96 bg-gray-900">
         <div className="absolute inset-0 w-1/2 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1589301760014-d929f39791e8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNzg4Nzd8MHwxfHNlYXJjaHwxfHxiaXJ5YW5pfGVufDB8fHx8MTY3NTc2MjY1MA&ixlib=rb-4.0.3&q=80&w=1080')" }}></div>
-        <div className="absolute inset-y-0 right-0 w-1/2 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1588166524941-3bf6a2ab4a4e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNzg4Nzd8MHwxfHNlYXJjaHwxfHxidXR0ZXIlMjBjaGlja2VufGVufDB8fHx8MTY3NTc2MjY1MA&ixlib=rb-4.0.3&q=80&w=1080')" }}></div>
+        <div className="absolute inset-y-0 right-0 w-1/2 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1588166524941-3bf6a2ab4a4e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNzg4Nzd8MHwxfHxidXR0ZXIlMjBjaGlja2VufGVufDB8fHx8MTY3NTc2MjY1MA&ixlib=rb-4.0.3&q=80&w=1080')" }}></div>
         <div className="relative h-full flex flex-col justify-center items-center bg-black bg-opacity-60 text-white text-center p-4">
           <h1 className="text-4xl md:text-6xl font-extrabold">India vs Korea: A Culinary Face-Off</h1>
           <p className="mt-4 text-lg md:text-xl max-w-2xl">A deep dive into flavors, traditions, and iconic dishes that define two rich cultures.</p>
@@ -87,8 +105,8 @@ export function FoodPage() {
           <div className="space-y-12">
             {filteredComparisons.map((comp, index) => (
               <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center relative">
-                <DishCard dish={comp.india} />
-                <DishCard dish={comp.korea} />
+                <DishCard dish={comp.india} onClick={handleDishClick} />
+                <DishCard dish={comp.korea} onClick={handleDishClick} />
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg border">
                   <UtensilsCrossed className="h-8 w-8 text-gray-500" />
                 </div>
