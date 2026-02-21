@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Send, User, Bot } from 'lucide-react';
+import { Send, User, Bot, Sparkles, MessageSquare, Info } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -72,9 +72,17 @@ export function ChatbotPage() {
 
   const [inputMessage, setInputMessage] = useState('');
   const [selectedGuide, setSelectedGuide] = useState<'both' | 'vivek' | 'mryu'>('both');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleQuickQuestion = (question: QuickQuestion) => {
-    // Add user's question
     const userMessage: Message = {
       id: Date.now().toString(),
       text: question.question,
@@ -84,7 +92,6 @@ export function ChatbotPage() {
 
     const newMessages = [userMessage];
 
-    // Add response(s) based on selected guide
     if (selectedGuide === 'both' || selectedGuide === 'vivek') {
       newMessages.push({
         id: (Date.now() + 1).toString(),
@@ -118,7 +125,6 @@ export function ChatbotPage() {
 
     const responseMessages: Message[] = [];
 
-    // Simulated responses
     if (selectedGuide === 'both' || selectedGuide === 'vivek') {
       responseMessages.push({
         id: (Date.now() + 1).toString(),
@@ -147,51 +153,64 @@ export function ChatbotPage() {
         <title>Chat with Vivek & Mr. Yu - AI Cultural Guides | IndoKorean</title>
         <meta name="description" content="Get instant answers to your cultural questions about India and Korea from our AI-powered guides, Vivek and Mr. Yu." />
       </Helmet>
-      <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl md:text-5xl mb-4">Ask Vivek & Mr. Yu</h1>
-          <p className="text-xl text-purple-100 max-w-3xl">
+      
+      {/* Header with Background Image */}
+      <div className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1762330465857-07e4c81c0dfa?q=80&w=1740&auto=format&fit=crop" 
+            alt="Cultural Exchange" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-purple-900/60 backdrop-blur-[1px]" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-md border border-white/30">
+              <Sparkles className="h-10 w-10 text-yellow-300" />
+            </div>
+            <h1 className="text-4xl md:text-6xl font-bold drop-shadow-lg">Ask Vivek & Mr. Yu</h1>
+          </div>
+          <p className="text-xl md:text-2xl text-purple-50 max-w-3xl leading-relaxed drop-shadow-md">
             Get instant answers to your cultural questions from our AI guides representing India and Korea
           </p>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-10">
           {/* Chat Area */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+            <div className="bg-white rounded-[2rem] shadow-xl border border-purple-100 overflow-hidden flex flex-col h-[700px]">
               {/* Guide Selector */}
-              <div className="bg-gray-50 border-b border-gray-200 p-4">
-                <div className="flex items-center gap-4">
-                  <span className="text-sm text-gray-700">Talk to:</span>
-                  <div className="flex gap-2">
+              <div className="bg-gray-50/50 backdrop-blur-sm border-b border-gray-100 p-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="h-5 w-5 text-purple-600" />
+                    <span className="font-bold text-gray-700 uppercase tracking-widest text-xs">Chat Session</span>
+                  </div>
+                  <div className="flex bg-white p-1 rounded-xl shadow-sm border border-gray-100">
                     <button
                       onClick={() => setSelectedGuide('both')}
-                      className={`px-4 py-2 rounded-lg text-sm transition-colors ${
-                        selectedGuide === 'both'
-                          ? 'bg-indigo-600 text-white'
-                          : 'bg-white text-gray-700 hover:bg-gray-100'
+                      className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                        selectedGuide === 'both' ? 'bg-purple-600 text-white shadow-md' : 'text-gray-500 hover:bg-gray-50'
                       }`}
                     >
-                      Both
+                      Both Guides
                     </button>
                     <button
                       onClick={() => setSelectedGuide('vivek')}
-                      className={`px-4 py-2 rounded-lg text-sm transition-colors ${
-                        selectedGuide === 'vivek'
-                          ? 'bg-orange-600 text-white'
-                          : 'bg-white text-gray-700 hover:bg-gray-100'
+                      className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                        selectedGuide === 'vivek' ? 'bg-orange-500 text-white shadow-md' : 'text-gray-500 hover:bg-gray-50'
                       }`}
                     >
                       🇮🇳 Vivek
                     </button>
                     <button
                       onClick={() => setSelectedGuide('mryu')}
-                      className={`px-4 py-2 rounded-lg text-sm transition-colors ${
-                        selectedGuide === 'mryu'
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-white text-gray-700 hover:bg-gray-100'
+                      className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                        selectedGuide === 'mryu' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-500 hover:bg-gray-50'
                       }`}
                     >
                       🇰🇷 Mr. Yu
@@ -201,104 +220,118 @@ export function ChatbotPage() {
               </div>
 
               {/* Messages */}
-              <div className="h-96 overflow-y-auto p-6 space-y-4">
+              <div className="flex-1 overflow-y-auto p-8 space-y-6 bg-gradient-to-b from-white to-purple-50/30">
                 {messages.map((message) => (
                   <div
                     key={message.id}
-                    className={`flex gap-3 ${
+                    className={`flex gap-4 ${
                       message.sender === 'user' ? 'flex-row-reverse' : ''
                     }`}
                   >
                     <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      className={`w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm border ${
                         message.sender === 'user'
-                          ? 'bg-gray-300'
+                          ? 'bg-indigo-100 border-indigo-200'
                           : message.sender === 'vivek'
-                          ? 'bg-orange-100'
-                          : 'bg-blue-100'
+                          ? 'bg-orange-100 border-orange-200'
+                          : 'bg-blue-100 border-blue-200'
                       }`}
                     >
                       {message.sender === 'user' ? (
-                        <User className="h-4 w-4 text-gray-600" />
+                        <User className="h-5 w-5 text-indigo-600" />
                       ) : (
                         <Bot
-                          className={`h-4 w-4 ${
+                          className={`h-5 w-5 ${
                             message.sender === 'vivek' ? 'text-orange-600' : 'text-blue-600'
                           }`}
                         />
                       )}
                     </div>
                     <div
-                      className={`flex-1 rounded-lg p-4 ${
+                      className={`max-w-[80%] rounded-2xl p-5 shadow-sm ${
                         message.sender === 'user'
-                          ? 'bg-indigo-600 text-white'
+                          ? 'bg-indigo-600 text-white rounded-tr-none'
                           : message.sender === 'vivek'
-                          ? 'bg-orange-50 text-gray-900'
-                          : 'bg-blue-50 text-gray-900'
+                          ? 'bg-white border border-orange-100 text-gray-800 rounded-tl-none'
+                          : 'bg-white border border-blue-100 text-gray-800 rounded-tl-none'
                       }`}
                     >
                       {message.sender !== 'user' && (
-                        <p className="text-xs mb-1 opacity-75">
-                          {message.sender === 'vivek' ? '🇮🇳 Vivek' : '🇰🇷 Mr. Yu'}
+                        <p className={`text-[10px] font-black uppercase tracking-widest mb-2 ${message.sender === 'vivek' ? 'text-orange-500' : 'text-blue-500'}`}>
+                          {message.sender === 'vivek' ? '🇮🇳 Vivek (India)' : '🇰🇷 Mr. Yu (Korea)'}
                         </p>
                       )}
-                      <p className="text-sm">{message.text}</p>
+                      <p className="text-sm leading-relaxed">{message.text}</p>
+                      <p className={`text-[9px] mt-2 opacity-50 ${message.sender === 'user' ? 'text-right' : ''}`}>
+                        {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </p>
                     </div>
                   </div>
                 ))}
+                <div ref={messagesEndRef} />
               </div>
 
               {/* Input */}
-              <div className="border-t border-gray-200 p-4">
-                <div className="flex gap-2">
+              <div className="p-6 bg-white border-t border-gray-100">
+                <div className="flex gap-3 bg-gray-50 p-2 rounded-2xl border border-gray-200 focus-within:border-purple-400 focus-within:ring-4 focus-within:ring-purple-100 transition-all">
                   <input
                     type="text"
                     value={inputMessage}
                     onChange={(e) => setInputMessage(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                    placeholder="Type your question..."
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    placeholder="Ask about culture, food, or etiquette..."
+                    className="flex-1 px-4 py-2 bg-transparent outline-none text-gray-700 placeholder:text-gray-400"
                   />
                   <button
                     onClick={handleSendMessage}
-                    className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2"
+                    className="p-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-all shadow-lg shadow-purple-200 active:scale-95"
                   >
-                    <Send className="h-4 w-4" />
-                    Send
+                    <Send className="h-5 w-5" />
                   </button>
                 </div>
-                <p className="text-xs text-gray-500 mt-2">
-                  💡 This is a demo chatbot with pre-programmed responses. Real implementation would use n8n for AI-powered answers.
-                </p>
+                <div className="flex items-center gap-2 mt-4 text-gray-400">
+                  <Info className="h-3 w-3" />
+                  <p className="text-[10px] font-medium uppercase tracking-wider">
+                    AI-Powered Cultural Insights • Vivek & Mr. Yu
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Quick Questions Sidebar */}
-          <div>
-            <h2 className="text-xl mb-4 text-gray-900">Quick Questions</h2>
-            <div className="space-y-3">
-              {quickQuestions.map((q, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleQuickQuestion(q)}
-                  className="w-full text-left bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-all hover:border-indigo-300 border border-transparent"
-                >
-                  <p className="text-sm text-gray-900">{q.question}</p>
-                </button>
-              ))}
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-sm font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Quick Questions</h2>
+              <div className="space-y-4">
+                {quickQuestions.map((q, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleQuickQuestion(q)}
+                    className="w-full text-left bg-white rounded-2xl p-5 shadow-sm hover:shadow-xl transition-all border border-gray-100 hover:border-purple-300 group"
+                  >
+                    <p className="text-sm text-gray-700 group-hover:text-purple-700 font-medium leading-relaxed">{q.question}</p>
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="mt-6 bg-purple-50 border border-purple-200 rounded-lg p-4">
-              <h3 className="text-sm mb-2 text-gray-900">About Your Guides</h3>
-              <div className="space-y-3 text-xs text-gray-700">
-                <div>
-                  <p className="font-medium text-orange-700">🇮🇳 Vivek</p>
-                  <p>Cultural expert from India with insights on traditions, workplace culture, and daily life across different Indian states.</p>
+            <div className="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-[2rem] p-8 text-white shadow-xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-4 opacity-10">
+                <Bot className="h-24 w-24" />
+              </div>
+              <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
+                <Info className="h-5 w-5" />
+                Your Guides
+              </h3>
+              <div className="space-y-6 relative z-10">
+                <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10">
+                  <p className="font-bold text-orange-300 mb-1">🇮🇳 Vivek</p>
+                  <p className="text-xs text-purple-50 leading-relaxed">Cultural expert from India with deep insights on traditions and daily life.</p>
                 </div>
-                <div>
-                  <p className="font-medium text-blue-700">🇰🇷 Mr. Yu</p>
-                  <p>Korean culture specialist helping you understand Korean workplace etiquette, social norms, and cultural practices.</p>
+                <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10">
+                  <p className="font-bold text-blue-300 mb-1">🇰🇷 Mr. Yu</p>
+                  <p className="text-xs text-purple-50 leading-relaxed">Korean culture specialist focusing on etiquette and social harmony.</p>
                 </div>
               </div>
             </div>
