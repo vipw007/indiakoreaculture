@@ -23,11 +23,14 @@ export function HomePage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
 
+  // Preload images to avoid solid color flashes
   useEffect(() => {
     HERO_IMAGES.forEach((url) => {
       const img = new Image();
       img.src = url;
-      img.onload = () => setLoadedImages((prev) => ({ ...prev, [url]: true }));
+      img.onload = () => {
+        setLoadedImages((prev) => ({ ...prev, [url]: true }));
+      };
     });
   }, []);
 
@@ -76,7 +79,7 @@ export function HomePage() {
       title: 'Visa & Doc.',
       description: 'Get help with visa applications, documentation, and other travel requirements.',
       link: '/visa',
-      image: 'https://plus.unsplash.com/premium_photo-1684407617236-9baf926474ad?q=80&w=1080',
+      image: 'https://plus.unsplash.com/premium_photo-1684407617236-9baf926474ad?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       color: 'from-amber-500 to-orange-600'
     },
     {
@@ -84,7 +87,7 @@ export function HomePage() {
       title: 'Exclusive Food',
       description: 'Discover and explore exclusive food items and culinary experiences from both countries.',
       link: '/food',
-      image: 'https://images.unsplash.com/photo-1678781416302-d59ed9ed46d0?q=80&w=1080',
+      image: 'https://images.unsplash.com/photo-1678781416302-d59ed9ed46d0?q=80&w=840&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       color: 'from-red-500 to-rose-600'
     },
   ];
@@ -102,7 +105,8 @@ export function HomePage() {
       </Helmet>
       
       {/* Hero Section */}
-      <div className="relative min-h-[600px] md:min-h-[700px] flex items-center overflow-hidden bg-black">
+      <div className="relative min-h-[600px] flex items-center overflow-hidden bg-black">
+        {/* Background Images */}
         {HERO_IMAGES.map((url, index) => (
           <div
             key={url}
@@ -110,14 +114,18 @@ export function HomePage() {
               index === currentImageIndex && loadedImages[url] ? 'opacity-100' : 'opacity-0'
             }`}
           >
-            <img src={url} alt="Hero" className="w-full h-full object-cover scale-110" />
-            <div className="absolute inset-0 bg-black/40" />
+            <img 
+              src={url} 
+              alt="Hero Background" 
+              className="w-full h-full object-cover scale-110" 
+            />
+            <div className="absolute inset-0 bg-black/30" />
           </div>
         ))}
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 w-full">
           <div className="text-center">
-            <h1 className="text-4xl md:text-7xl mb-8 font-bold text-white drop-shadow-2xl tracking-tight">
+            <h1 className="text-4xl md:text-6xl mb-6 font-bold text-white drop-shadow-lg">
               {t('homepage.title')}
             </h1>
             
@@ -130,7 +138,7 @@ export function HomePage() {
                 <div
                   key={i}
                   onClick={() => scrollToSection(item.id)}
-                  className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 hover:bg-white/20 transition-all cursor-pointer group"
+                  className="bg-white/10 backdrop-blur-md p-6 rounded-xl border border-white/20 hover:bg-white/20 transition-all cursor-pointer group"
                 >
                   <div className="flex justify-center mb-4 group-hover:scale-110 transition-transform">
                     <item.icon className={`h-8 w-8 ${item.color}`} />
@@ -142,11 +150,19 @@ export function HomePage() {
             </div>
 
             <div className="flex gap-4 justify-center flex-wrap">
-              <Link to="/tourism" className="bg-white text-gray-900 px-8 py-4 rounded-xl hover:bg-gray-100 transition-all shadow-xl font-bold text-lg flex items-center gap-2">
-                {t('homepage.explore_culture')} <ArrowRight className="h-5 w-5" />
+              <Link
+                to="/tourism"
+                className="bg-white text-indigo-600 px-8 py-3 rounded-lg hover:bg-indigo-50 transition-colors inline-flex items-center gap-2 font-semibold"
+              >
+                {t('homepage.explore_culture')}
+                <ArrowRight className="h-5 w-5" />
               </Link>
-              <Link to="/chatbot" className="bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-xl hover:bg-white/20 transition-all font-bold text-lg border border-white/30 flex items-center gap-2">
-                {t('homepage.ask_questions')} <MessageCircle className="h-5 w-5" />
+              <Link
+                to="/chatbot"
+                className="bg-indigo-700 text-white px-8 py-3 rounded-lg hover:bg-indigo-800 transition-colors inline-flex items-center gap-2 font-semibold border border-indigo-500"
+              >
+                {t('homepage.ask_questions')}
+                <MessageCircle className="h-5 w-5" />
               </Link>
             </div>
           </div>
@@ -154,10 +170,12 @@ export function HomePage() {
       </div>
 
       {/* Features Grid */}
-      <div id="features-grid" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl mb-4 text-gray-900 font-extrabold tracking-tight">{t('homepage.features_title')}</h2>
-          <p className="text-gray-500 max-w-2xl mx-auto text-lg">{t('homepage.features_subtitle')}</p>
+      <div id="features-grid" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-grow">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl mb-4 text-gray-900 font-bold">{t('homepage.features_title')}</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            {t('homepage.features_subtitle')}
+          </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
@@ -167,31 +185,31 @@ export function HomePage() {
               <Link
                 key={feature.title}
                 to={feature.link}
-                className="group relative bg-white rounded-[2rem] shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 overflow-hidden flex flex-col"
+                className="group relative bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-500 border border-gray-100 flex flex-col"
               >
-                <div className="aspect-[4/3] relative overflow-hidden">
+                <div className="aspect-video relative overflow-hidden">
                   <ImageWithFallback
                     src={feature.image}
                     alt={feature.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1.5s] ease-out"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   
                   {/* Floating Icon Badge */}
-                  <div className={`absolute bottom-6 left-6 p-3 rounded-2xl bg-gradient-to-br ${feature.color} shadow-lg transform group-hover:-translate-y-2 transition-transform duration-500`}>
+                  <div className={`absolute bottom-4 left-4 p-2 rounded-lg bg-gradient-to-br ${feature.color} shadow-lg transform group-hover:-translate-y-1 transition-transform duration-500`}>
                     <Icon className="h-6 w-6 text-white" />
                   </div>
                 </div>
                 
-                <div className="p-8 flex-grow">
-                  <h3 className="text-2xl mb-3 text-gray-900 group-hover:text-indigo-600 transition-colors font-bold">
+                <div className="p-6 flex-grow">
+                  <h3 className="text-xl mb-2 text-gray-900 group-hover:text-indigo-600 transition-colors font-semibold">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-500 mb-6 leading-relaxed line-clamp-3">
+                  <p className="text-gray-600 mb-4 line-clamp-3">
                     {feature.description}
                   </p>
-                  <div className="flex items-center text-indigo-600 font-bold text-sm uppercase tracking-widest gap-2 group-hover:gap-4 transition-all">
-                    Explore Now <ArrowRight className="h-4 w-4" />
+                  <div className="flex items-center text-indigo-600 font-medium text-sm gap-1 group-hover:gap-2 transition-all">
+                    Learn more <ArrowRight className="h-4 w-4" />
                   </div>
                 </div>
               </Link>
@@ -201,20 +219,20 @@ export function HomePage() {
       </div>
 
       {/* Trust Section */}
-      <div id="trust-section" className="bg-gray-50 py-24 border-y border-gray-100">
+      <div id="trust-section" className="bg-gray-100 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl md:text-4xl mb-16 text-gray-900 font-bold">{t('homepage.trust_title')}</h2>
+            <h2 className="text-3xl mb-8 text-gray-900 font-bold">{t('homepage.trust_title')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
                 { emoji: '📚', title: 'homepage.comprehensive', text: 'homepage.comprehensive_text' },
                 { emoji: '🔒', title: 'homepage.safe', text: 'homepage.safe_text' },
                 { emoji: '🌏', title: 'homepage.authentic', text: 'homepage.authentic_text' }
               ].map((item, i) => (
-                <div key={i} className="bg-white p-10 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-gray-100 group">
-                  <div className="text-5xl mb-6 group-hover:scale-110 transition-transform duration-500 inline-block">{item.emoji}</div>
-                  <h3 className="text-xl mb-3 text-gray-900 font-bold">{t(item.title)}</h3>
-                  <p className="text-gray-500 leading-relaxed">{t(item.text)}</p>
+                <div key={i} className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                  <div className="text-3xl mb-2">{item.emoji}</div>
+                  <h3 className="text-lg mb-2 text-gray-900 font-semibold">{t(item.title)}</h3>
+                  <p className="text-gray-600">{t(item.text)}</p>
                 </div>
               ))}
             </div>
@@ -223,17 +241,20 @@ export function HomePage() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-20">
+      <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-12">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                 <div>
-                  <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-yellow-400"><Sparkles className="h-5 w-5" /> {t('homepage.vision')}</h3>
-                  <p className="text-gray-400 leading-relaxed">{t('homepage.vision_text')}</p>
+                  <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-yellow-400"><Sparkles className="h-5 w-5" /> {t('homepage.vision')}</h3>
+                  <p className="text-gray-400 mb-6">{t('homepage.vision_text')}</p>
+                  
+                  <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-pink-400"><Heart className="h-5 w-5" /> {t('homepage.value')}</h3>
+                  <p className="text-gray-400">{t('homepage.value_text')}</p>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-green-400"><ShieldCheck className="h-5 w-5" /> {t('homepage.mission')}</h3>
+                  <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-green-400"><ShieldCheck className="h-5 w-5" /> {t('homepage.mission')}</h3>
                   <ul className="text-gray-400 space-y-2 list-disc pl-4 text-sm">
                     {missionPoints.map((point, index) => <li key={index}>{point}</li>)}
                   </ul>
@@ -241,21 +262,21 @@ export function HomePage() {
               </div>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-blue-400"><MapPin className="h-5 w-5" /> {t('homepage.footer_destination')}</h3>
+              <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-blue-400"><MapPin className="h-5 w-5" /> {t('homepage.footer_destination')}</h3>
               <ul className="space-y-2 text-gray-400">
                 <li><Link to="/tourism" className="hover:text-white transition-colors">India</Link></li>
                 <li><Link to="/tourism" className="hover:text-white transition-colors">South Korea</Link></li>
               </ul>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-purple-400"><HelpCircle className="h-5 w-5" /> {t('homepage.footer_support')}</h3>
+              <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-purple-400"><HelpCircle className="h-5 w-5" /> {t('homepage.footer_support')}</h3>
               <ul className="space-y-4 text-gray-400">
                 <li><Link to="/contact" className="flex items-center gap-2 hover:text-white transition-colors"><Mail className="h-4 w-4" /> {t('homepage.footer_contact')}</Link></li>
                 <li><Link to="/faq" className="flex items-center gap-2 hover:text-white transition-colors"><HelpCircle className="h-4 w-4" /> {t('homepage.footer_faq')}</Link></li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-16 pt-8 text-center text-gray-500">
+          <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500">
             <p>{t('homepage.copyright', { year: new Date().getFullYear() })}</p>
           </div>
         </div>
