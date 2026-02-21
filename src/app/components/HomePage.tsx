@@ -1,11 +1,45 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 import { Globe, Building2, MessageCircle, Users, ArrowRight, Heart, ShieldCheck, Sparkles, MapPin, Mail, HelpCircle, FileText, Utensils } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
+const HERO_IMAGES = [
+  'https://images.unsplash.com/photo-1636625716229-0e72a641e3c5?q=80&w=1740&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1617541016107-b62971c6e27f?q=80&w=1738&auto=format&fit=crop',
+  'https://plus.unsplash.com/premium_photo-1661878589476-bcad7fe1b8c5?q=80&w=1740&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1583833008338-31a6657917ab?q=80&w=1740&auto=format&fit=crop',
+  'https://plus.unsplash.com/premium_photo-1661962699053-3f216d2f4c48?q=80&w=1548&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1740&auto=format&fit=crop&q=80',
+  'https://plus.unsplash.com/premium_photo-1661962542692-4fe7a4ad6b54?q=80&w=1742&auto=format&fit=crop',
+  'https://plus.unsplash.com/premium_photo-1697729844084-c03db2377161?q=80&w=1738&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1593693411515-c20261bcad6e?q=80&w=1738&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1521354719423-661a3204204f?q=80&w=1548&auto=format&fit=crop'
+];
+
 export function HomePage() {
   const { t } = useTranslation();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
+
+  // Preload images to avoid solid color flashes
+  useEffect(() => {
+    HERO_IMAGES.forEach((url) => {
+      const img = new Image();
+      img.src = url;
+      img.onload = () => {
+        setLoadedImages((prev) => ({ ...prev, [url]: true }));
+      };
+    });
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % HERO_IMAGES.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, []);
 
   const features = [
     {
@@ -20,7 +54,7 @@ export function HomePage() {
       title: t('header.office'),
       description: 'Navigate workplace differences between India and Korea with practical scenarios and safe actions.',
       link: '/office-culture',
-      image: 'https://images.unsplash.com/photo-1568992687947-868a62a9f521?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHxvZmZpY2UlMjB0ZWFtd29ya3xlbnwxfHx8fDE3NjgwNDcwNjZ8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      image: 'https://images.unsplash.com/photo-1568992687947-868a62a9f521?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvZmZpY2UlMjB0ZWFtd29ya3xlbnwxfHx8fDE3NjgwNDcwNjZ8MA&ixlib=rb-4.1.0&q=80&w=1080',
     },
     {
       icon: MessageCircle,
@@ -34,21 +68,21 @@ export function HomePage() {
       title: t('header.community'),
       description: 'Join topic-based rooms for real cultural exchange with moderated Q&A and scheduled sessions.',
       link: '/community',
-      image: 'https://images.unsplash.com/photo-1548115184-bc6544d06a58?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHxrb3JlYSUyMHNlb3VsfGVufDF8fHx8MTc2ODEzMjIxNXww&ixlib=rb-4.1.0&q=80&w=1080',
+      image: 'https://images.unsplash.com/photo-1548115184-bc6544d06a58?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxrb3JlYSUyMHNlb3VsfGVufDF8fHx8MTc2ODEzMjIxNXww&ixlib=rb-4.1.0&q=80&w=1080',
     },
     {
       icon: FileText,
       title: 'Visa & Doc.',
       description: 'Get help with visa applications, documentation, and other travel requirements.',
       link: '/visa',
-      image: 'https://images.pexels.com/photos/163771/passport-travel-vacation-document-163771.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      image: 'https://plus.unsplash.com/premium_photo-1684407617236-9baf926474ad?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     },
     {
       icon: Utensils,
       title: 'Exclusive Food',
       description: 'Discover and explore exclusive food items and culinary experiences from both countries.',
       link: '/food',
-      image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmb29kfGVufDF8fHx8MTc2ODg0MjM3Nnww&ixlib=rb-4.1.0&q=80&w=1080',
+      image: 'https://images.unsplash.com/photo-1678781416302-d59ed9ed46d0?q=80&w=840&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     },
   ];
 
@@ -64,17 +98,36 @@ export function HomePage() {
         <title>IndoKorean - Bridging Cultures Between India and Korea</title>
         <meta name="description" content="Explore cultural guides, navigate workplace differences, and connect with a community of learners. Your one-stop platform for all things India and Korea." />
       </Helmet>
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      
+      {/* Hero Section with Dynamic Background */}
+      <div className="relative min-h-[600px] flex items-center overflow-hidden bg-black">
+        {/* Background Images */}
+        {HERO_IMAGES.map((url, index) => (
+          <div
+            key={url}
+            className={`absolute inset-0 transition-opacity duration-[2500ms] ease-in-out ${
+              index === currentImageIndex && loadedImages[url] ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <img 
+              src={url} 
+              alt="Hero Background" 
+              className="w-full h-full object-cover" 
+            />
+            {/* Subtle dark overlay for readability */}
+            <div className="absolute inset-0 bg-black/30" />
+          </div>
+        ))}
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 w-full">
           <div className="text-center">
-            <h1 className="text-4xl md:text-6xl mb-6 font-bold">
+            <h1 className="text-4xl md:text-6xl mb-6 font-bold text-white drop-shadow-lg">
               {t('homepage.title')}
             </h1>
             
             <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
               <div
-                onClick={() => scrollToSection('features-grid')} // Scroll to Features Grid
+                onClick={() => scrollToSection('features-grid')}
                 className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 hover:bg-white/20 transition-all cursor-pointer"
               >
                 <div className="flex justify-center mb-4">
@@ -85,7 +138,7 @@ export function HomePage() {
               </div>
 
               <div
-                onClick={() => scrollToSection('features-grid')} // Scroll to Features Grid
+                onClick={() => scrollToSection('features-grid')}
                 className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 hover:bg-white/20 transition-all cursor-pointer"
               >
                 <div className="flex justify-center mb-4">
@@ -96,7 +149,7 @@ export function HomePage() {
               </div>
 
               <div
-                onClick={() => scrollToSection('trust-section')} // Scroll to Trust Section
+                onClick={() => scrollToSection('trust-section')}
                 className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 hover:bg-white/20 transition-all cursor-pointer"
               >
                 <div className="flex justify-center mb-4">
@@ -173,7 +226,7 @@ export function HomePage() {
       </div>
 
       {/* Trust Section */}
-      <div id="trust-section" className="bg-gray-100 py-16"> {/* Added id here */}
+      <div id="trust-section" className="bg-gray-100 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl mb-4 text-gray-900 font-bold">{t('homepage.trust_title')}</h2>
@@ -243,10 +296,8 @@ export function HomePage() {
                 {t('homepage.footer_destination')}
               </h3>
               <ul className="space-y-2 text-gray-400">
-                <li><Link to="/tourism" className="hover:text-white transition-colors">{t('homepage.footer_usa')}</Link></li>
-                <li><Link to="/tourism" className="hover:text-white transition-colors">{t('homepage.footer_europe')}</Link></li>
-                <li><Link to="/tourism" className="hover:text-white transition-colors">{t('homepage.footer_india')}</Link></li>
-                <li><Link to="/tourism" className="hover:text-white transition-colors">{t('homepage.footer_korea')}</Link></li>
+                <li><Link to="/tourism" className="hover:text-white transition-colors">India</Link></li>
+                <li><Link to="/tourism" className="hover:text-white transition-colors">South Korea</Link></li>
               </ul>
             </div>
 

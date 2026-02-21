@@ -19,6 +19,11 @@ const moodOptions = [
   'Culture', 'Food', 'Photography', 'History'
 ];
 
+const REGION_BGS = {
+  india: 'https://plus.unsplash.com/premium_photo-1697730342875-3788c28451cd?q=80&w=2992&auto=format&fit=crop',
+  korea: 'https://images.unsplash.com/photo-1740785978879-506357754d72?q=80&w=1740&auto=format&fit=crop'
+};
+
 export function TourismPage() {
   const [selectedRegion, setSelectedRegion] = useState<'india' | 'korea'>('india');
   const [data, setData] = useState<StateData[]>([]);
@@ -95,17 +100,30 @@ export function TourismPage() {
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
       </Helmet>
-      <div className="bg-gradient-to-r from-orange-500 to-pink-500 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      {/* Dynamic Header with Background Image */}
+      <div className="relative py-16 overflow-hidden">
+        {/* Background Image Layer */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={REGION_BGS[selectedRegion]} 
+            alt={country} 
+            className="w-full h-full object-cover transition-all duration-1000 ease-in-out"
+          />
+          {/* Overlay for text readability - Removed blur */}
+          <div className="absolute inset-0 bg-black/40" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-6">
-            <h1 className="text-4xl md:text-5xl text-center md:text-left font-bold">Tourism & Culture</h1>
+            <h1 className="text-4xl md:text-5xl text-center md:text-left font-bold drop-shadow-lg">Tourism & Culture</h1>
             
             <div className="flex flex-col sm:flex-row items-center gap-4">
               {/* Region Toggle */}
-              <div className="flex-shrink-0 flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-lg p-1">
+              <div className="flex-shrink-0 flex items-center gap-2 bg-white/20 backdrop-blur-md rounded-lg p-1 border border-white/30">
                 <button
                   onClick={() => setSelectedRegion('india')}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all text-sm font-semibold ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all text-sm font-bold ${
                     selectedRegion === 'india'
                       ? 'bg-white text-orange-600 shadow-md'
                       : 'text-white hover:bg-white/10'
@@ -116,9 +134,9 @@ export function TourismPage() {
                 </button>
                 <button
                   onClick={() => setSelectedRegion('korea')}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all text-sm font-semibold ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all text-sm font-bold ${
                     selectedRegion === 'korea'
-                      ? 'bg-white text-orange-600 shadow-md'
+                      ? 'bg-white text-indigo-600 shadow-md'
                       : 'text-white hover:bg-white/10'
                   }`}
                 >
@@ -129,21 +147,21 @@ export function TourismPage() {
             </div>
           </div>
           
-          <p className="text-xl text-orange-100 max-w-3xl text-center md:text-left">
+          <p className="text-xl text-white/90 max-w-3xl text-center md:text-left leading-relaxed drop-shadow-md">
             {pageDescription}
           </p>
           
           <div className="mt-8">
-            <label className="block text-sm font-medium text-orange-200 mb-2">Filter by Mood</label>
+            <label className="block text-sm font-bold text-white/70 uppercase tracking-widest mb-2">Filter by Mood</label>
             <div className="flex flex-wrap gap-2">
               {moodOptions.map(mood => (
                 <button
                   key={mood}
                   onClick={() => setMoodFilter(mood)}
-                  className={`px-4 py-2 rounded-lg transition-colors text-sm font-semibold ${
+                  className={`px-4 py-2 rounded-lg transition-all text-sm font-bold border ${
                     moodFilter === mood
-                      ? 'bg-white text-orange-600 shadow-md'
-                      : 'bg-white/20 text-white hover:bg-white/30'
+                      ? 'bg-white text-gray-900 border-white shadow-md'
+                      : 'bg-black/20 text-white border-white/30 hover:bg-white/20'
                   }`}
                 >
                   {mood}
