@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { db, auth } from '../firebase'; // Import auth
+import { db, auth } from '../firebase';
 import { collection, getDocs, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
-import { Users, Calendar, MessageSquare, Video, Shield, TrendingUp, Mic, Video as VideoIcon, PlusCircle, LogIn } from 'lucide-react';
+import { Users, Calendar, MessageSquare, Video, Shield, TrendingUp, Mic, Video as VideoIcon, PlusCircle, LogIn, Hash, Globe, Lock } from 'lucide-react';
 
-// Interfaces from your existing code
 interface Room {
   id: string;
   title: string;
@@ -33,11 +32,9 @@ export function CommunityPage() {
   const [upcomingSessions, setUpcomingSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const currentUser = auth.currentUser; // Get current user
+  const currentUser = auth.currentUser;
 
-  // State for joining any chat by ID
   const [chatIdToJoin, setChatIdToJoin] = useState('');
-  // State for creating a new private room
   const [newPrivateRoomName, setNewPrivateRoomName] = useState('');
 
   useEffect(() => {
@@ -160,137 +157,201 @@ export function CommunityPage() {
         <title>Community Connection - Chat & Sessions | IndoKorean</title>
         <meta name="description" content="Join topic-based chat rooms, create private groups, and connect with others through audio and video calls to discuss Indian and Korean culture." />
       </Helmet>
-      <div className="bg-gradient-to-r from-green-600 to-teal-600 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-4">
-            <Users className="h-10 w-10" />
-            <h1 className="text-4xl md:text-5xl">Community Connection</h1>
+      
+      {/* Header with Background Image */}
+      <div className="relative py-24 overflow-hidden bg-black">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=3132&auto=format&fit=crop"
+            alt="Community Connection" 
+            className="w-full h-full object-cover"
+          />
+          {/* Transparent overlay to show image colors clearly */}
+          <div className="absolute inset-0 bg-black/30" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-md border border-white/30">
+              <Users className="h-10 w-10 text-white" />
+            </div>
+            <h1 className="text-4xl md:text-6xl font-bold drop-shadow-lg">Community Connection</h1>
           </div>
-          <p className="text-xl text-green-100 max-w-3xl">
+          <p className="text-xl md:text-2xl text-white max-w-3xl leading-relaxed drop-shadow-md">
             Join topic-based rooms, create private chats, and connect with others through audio and video calls.
           </p>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="bg-white shadow-sm rounded-lg p-6 mb-8">
-          <h2 className="text-xl mb-4 text-gray-900">Private & Group Chat</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <form onSubmit={handleCreatePrivateRoom}>
-              <label htmlFor="new-private-room-name" className="block text-sm font-medium text-gray-700 mb-1">Create a new private room</label>
-              <div className="flex gap-2">
+        {/* Quick Actions Grid */}
+        <div className="grid md:grid-cols-2 gap-8 mb-12">
+          <div className="bg-white rounded-3xl p-8 shadow-sm border border-teal-100 hover:shadow-xl transition-all duration-500 group">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-teal-50 rounded-lg text-teal-600 group-hover:bg-teal-600 group-hover:text-white transition-colors">
+                <Lock size={24} />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900">Create Private Room</h2>
+            </div>
+            <form onSubmit={handleCreatePrivateRoom} className="space-y-4">
+              <div className="flex gap-3 bg-gray-50 p-2 rounded-2xl border border-gray-200 focus-within:border-teal-400 focus-within:ring-4 focus-within:ring-teal-50 transition-all">
                 <input
-                  id="new-private-room-name"
                   type="text"
                   value={newPrivateRoomName}
                   onChange={(e) => setNewPrivateRoomName(e.target.value)}
-                  placeholder={!currentUser ? "Log in to create a room" : "Enter room name"}
-                  className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  placeholder={!currentUser ? "Log in to create a room" : "Enter room name..."}
+                  className="flex-1 px-4 py-2 bg-transparent outline-none text-gray-700"
                   disabled={!currentUser}
-                  title={!currentUser ? authTooltip : ""}
                 />
-                <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed" disabled={!currentUser} title={!currentUser ? authTooltip : "Create a new private room"}>
-                  <PlusCircle size={18} /> Create
+                <button type="submit" className="bg-teal-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-teal-700 transition-all shadow-lg shadow-teal-100 disabled:bg-gray-300" disabled={!currentUser}>
+                  Create
                 </button>
               </div>
             </form>
-            <form onSubmit={handleJoinAnyChat}>
-              <label htmlFor="chat-id-to-join" className="block text-sm font-medium text-gray-700 mb-1">Join any chat with an ID</label>
-              <div className="flex gap-2">
+          </div>
+
+          <div className="bg-white rounded-3xl p-8 shadow-sm border border-blue-100 hover:shadow-xl transition-all duration-500 group">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-blue-50 rounded-lg text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                <Hash size={24} />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900">Join with ID</h2>
+            </div>
+            <form onSubmit={handleJoinAnyChat} className="space-y-4">
+              <div className="flex gap-3 bg-gray-50 p-2 rounded-2xl border border-gray-200 focus-within:border-blue-400 focus-within:ring-4 focus-within:ring-blue-50 transition-all">
                 <input
-                  id="chat-id-to-join"
                   type="text"
                   value={chatIdToJoin}
                   onChange={(e) => setChatIdToJoin(e.target.value)}
-                  placeholder={!currentUser ? "Log in to join a chat" : "Enter chat ID"}
-                  className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  placeholder={!currentUser ? "Log in to join a chat" : "Enter chat ID..."}
+                  className="flex-1 px-4 py-2 bg-transparent outline-none text-gray-700"
                   disabled={!currentUser}
-                  title={!currentUser ? authTooltip : ""}
                 />
-                <button type="submit" className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 flex items-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed" disabled={!currentUser} title={!currentUser ? authTooltip : "Join an existing chat"}>
-                  <LogIn size={18} /> Join
+                <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 disabled:bg-gray-300" disabled={!currentUser}>
+                  Join
                 </button>
               </div>
             </form>
           </div>
         </div>
 
-        <div className="mb-8">
-          <h2 className="text-xl mb-4 text-gray-900">Browse by Topic</h2>
-          <div className="flex flex-wrap gap-2">
-            <button onClick={() => setSelectedCategory(null)} className={`px-4 py-2 rounded-lg transition-colors ${selectedCategory === null ? 'bg-teal-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}>All Rooms</button>
-            <button onClick={() => setSelectedCategory('office')} className={`px-4 py-2 rounded-lg transition-colors ${selectedCategory === 'office' ? 'bg-teal-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}>💼 Office Life</button>
-            <button onClick={() => setSelectedCategory('travel')} className={`px-4 py-2 rounded-lg transition-colors ${selectedCategory === 'travel' ? 'bg-teal-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}>✈️ Travel Help</button>
-            <button onClick={() => setSelectedCategory('culture')} className={`px-4 py-2 rounded-lg transition-colors ${selectedCategory === 'culture' ? 'bg-teal-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}>🎭 Culture Questions</button>
+        {/* Topic Filter */}
+        <div className="mb-12">
+          <h2 className="text-sm font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Browse by Topic</h2>
+          <div className="flex flex-wrap gap-3">
+            <button onClick={() => setSelectedCategory(null)} className={`px-6 py-2.5 rounded-full transition-all font-bold text-sm border ${selectedCategory === null ? 'bg-teal-600 text-white border-teal-600 shadow-lg scale-105' : 'bg-white text-gray-600 border-gray-200 hover:border-teal-300'}`}>All Rooms</button>
+            <button onClick={() => setSelectedCategory('office')} className={`px-6 py-2.5 rounded-full transition-all font-bold text-sm border ${selectedCategory === 'office' ? 'bg-teal-600 text-white border-teal-600 shadow-lg scale-105' : 'bg-white text-gray-600 border-gray-200 hover:border-teal-300'}`}>💼 Office Life</button>
+            <button onClick={() => setSelectedCategory('travel')} className={`px-6 py-2.5 rounded-full transition-all font-bold text-sm border ${selectedCategory === 'travel' ? 'bg-teal-600 text-white border-teal-600 shadow-lg scale-105' : 'bg-white text-gray-600 border-gray-200 hover:border-teal-300'}`}>✈️ Travel Help</button>
+            <button onClick={() => setSelectedCategory('culture')} className={`px-6 py-2.5 rounded-full transition-all font-bold text-sm border ${selectedCategory === 'culture' ? 'bg-teal-600 text-white border-teal-600 shadow-lg scale-105' : 'bg-white text-gray-600 border-gray-200 hover:border-teal-300'}`}>🎭 Culture Questions</button>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <h2 className="text-xl mb-4 text-gray-900">Topic-Based Rooms</h2>
-            {loading ? <p>Loading rooms...</p> : filteredRooms.length > 0 ? (
-              <div className="space-y-4">
+        <div className="grid lg:grid-cols-3 gap-12">
+          {/* Rooms List */}
+          <div className="lg:col-span-2 space-y-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <Globe className="h-6 w-6 text-teal-600" />
+              Topic-Based Rooms
+            </h2>
+            {loading ? (
+              <div className="flex justify-center py-12"><div className="w-10 h-10 border-4 border-teal-500 border-t-transparent rounded-full animate-spin"></div></div>
+            ) : filteredRooms.length > 0 ? (
+              <div className="space-y-6">
                 {filteredRooms.map((room) => (
-                  <div key={room.id} className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-all">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <span className="text-3xl">{room.icon}</span>
+                  <div key={room.id} className="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-8 hover:shadow-xl transition-all duration-500 group">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+                      <div className="flex items-start gap-5">
+                        <div className="text-5xl bg-gray-50 p-4 rounded-2xl group-hover:scale-110 transition-transform duration-500">{room.icon}</div>
                         <div>
-                          <h3 className="text-lg text-gray-900">{room.title}</h3>
-                          <p className="text-sm text-gray-600">{room.description}</p>
+                          <h3 className="text-2xl font-bold text-gray-900 mb-2">{room.title}</h3>
+                          <p className="text-gray-500 leading-relaxed">{room.description}</p>
+                        </div>
+                      </div>
+                      <div className="flex flex-row md:flex-col items-center md:items-end gap-4 md:gap-1">
+                        <div className="flex items-center gap-1.5 text-sm font-bold text-gray-400">
+                          <Users className="h-4 w-4" />
+                          <span>{room.members.toLocaleString()}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-sm font-bold text-green-500 bg-green-50 px-3 py-1 rounded-full">
+                          <TrendingUp className="h-3 w-3" />
+                          <span>{room.activeNow} online</span>
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-6 text-sm text-gray-600 mb-4">
-                      <div className="flex items-center gap-1"><Users className="h-4 w-4" /><span>{room.members.toLocaleString()} members</span></div>
-                      <div className="flex items-center gap-1"><TrendingUp className="h-4 w-4 text-green-600" /><span className="text-green-600">{room.activeNow} active now</span></div>
-                    </div>
-                    <div className="flex flex-col sm:flex-row gap-2">
-                      <button onClick={() => handleCreateTopicGroupChat(room.title)} className="flex-1 bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 transition-colors flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed" disabled={!currentUser} title={!currentUser ? authTooltip : `Start a new chat about ${room.title}`}>
-                        <MessageSquare className="h-4 w-4" /> Start New Chat
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <button onClick={() => handleCreateTopicGroupChat(room.title)} className="flex items-center justify-center gap-2 bg-teal-600 text-white py-3 px-4 rounded-xl font-bold hover:bg-teal-700 transition-all shadow-lg shadow-teal-100 active:scale-95 disabled:bg-gray-200" disabled={!currentUser}>
+                        <MessageSquare size={18} /> Chat
                       </button>
-                      <button onClick={() => handleJoinCall('audio')} className="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed" disabled={!currentUser} title={!currentUser ? authTooltip : "Join Audio Call"}>
-                        <Mic className="h-4 w-4" /> Join Audio Call
+                      <button onClick={() => handleJoinCall('audio')} className="flex items-center justify-center gap-2 bg-blue-500 text-white py-3 px-4 rounded-xl font-bold hover:bg-blue-600 transition-all shadow-lg shadow-blue-100 active:scale-95 disabled:bg-gray-200" disabled={!currentUser}>
+                        <Mic size={18} /> Audio
                       </button>
-                      <button onClick={() => handleJoinCall('video')} className="flex-1 bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed" disabled={!currentUser} title={!currentUser ? authTooltip : "Join Video Call"}>
-                        <VideoIcon className="h-4 w-4" /> Join Video Call
+                      <button onClick={() => handleJoinCall('video')} className="flex items-center justify-center gap-2 bg-purple-500 text-white py-3 px-4 rounded-xl font-bold hover:bg-purple-600 transition-all shadow-lg shadow-purple-100 active:scale-95 disabled:bg-gray-200" disabled={!currentUser}>
+                        <VideoIcon size={18} /> Video
                       </button>
                     </div>
                   </div>
                 ))}
               </div>
-            ) : <p>No rooms available at the moment. Please check back later.</p>}
+            ) : <p className="text-gray-500 italic">No rooms available at the moment.</p>}
           </div>
-          <div>
-            <h2 className="text-xl mb-4 text-gray-900">Upcoming Sessions</h2>
-            {loading ? <p>Loading sessions...</p> : upcomingSessions.length > 0 ? (
-              <div className="space-y-4">
+
+          {/* Sidebar */}
+          <div className="space-y-10">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <Calendar className="h-6 w-6 text-teal-600" />
+                Live Sessions
+              </h2>
+              <div className="space-y-6">
                 {upcomingSessions.map((session) => (
-                  <div key={session.id} className="bg-white rounded-lg shadow-sm p-4">
-                    <h3 className="text-base text-gray-900 mb-2">{session.title}</h3>
-                    <div className="space-y-2 text-sm text-gray-600 mb-3">
-                      <div className="flex items-center gap-2"><Calendar className="h-4 w-4" /><span>{session.date}</span></div>
-                      <div className="flex items-center gap-2">{session.type === 'audio' ? <Video className="h-4 w-4" /> : <MessageSquare className="h-4 w-4" />}<span>{session.time} • {session.type === 'audio' ? 'Audio' : 'Text'}</span></div>
-                      <div className="flex items-center gap-2"><Users className="h-4 w-4" /><span>{session.host}</span></div>
+                  <div key={session.id} className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className={`p-1.5 rounded-lg ${session.type === 'audio' ? 'bg-blue-50 text-blue-600' : 'bg-teal-50 text-teal-600'}`}>
+                        {session.type === 'audio' ? <Mic size={16} /> : <MessageSquare size={16} />}
+                      </span>
+                      <h3 className="font-bold text-gray-900">{session.title}</h3>
                     </div>
-                    <div className="mb-3">
-                      <div className="flex justify-between text-xs text-gray-600 mb-1"><span>{session.participants} joined</span><span>{session.maxParticipants} max</span></div>
-                      <div className="w-full bg-gray-200 rounded-full h-2"><div className="bg-teal-600 h-2 rounded-full" style={{ width: `${(session.participants / session.maxParticipants) * 100}%` }} /></div>
+                    <div className="space-y-3 text-sm text-gray-500 mb-6">
+                      <div className="flex items-center gap-2"><Calendar size={14} /> {session.date} • {session.time}</div>
+                      <div className="flex items-center gap-2"><Users size={14} /> Host: {session.host}</div>
                     </div>
-                    <button className="w-full bg-white border border-teal-600 text-teal-600 py-2 rounded-lg hover:bg-teal-50 transition-colors text-sm disabled:bg-gray-200 disabled:cursor-not-allowed" disabled={!currentUser} title={!currentUser ? authTooltip : "Register for this session"}>Register</button>
+                    <div className="mb-6">
+                      <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">
+                        <span>{session.participants} Joined</span>
+                        <span>{session.maxParticipants} Max</span>
+                      </div>
+                      <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                        <div className="bg-teal-500 h-full transition-all duration-1000" style={{ width: `${(session.participants / session.maxParticipants) * 100}%` }} />
+                      </div>
+                    </div>
+                    <button className="w-full py-3 rounded-xl font-bold border-2 border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white transition-all active:scale-95 disabled:bg-gray-50 disabled:border-gray-200 disabled:text-gray-300" disabled={!currentUser}>
+                      Register Now
+                    </button>
                   </div>
                 ))}
               </div>
-            ) : <p>No upcoming sessions scheduled.</p>}
-            <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <h3 className="text-sm mb-2 text-gray-900">Community Guidelines</h3>
-              <ul className="space-y-1 text-xs text-gray-700">
-                <li>• Be respectful and courteous</li>
-                <li>• No harassment or hate speech</li>
-                <li>• Stay on topic in each room</li>
-                <li>• No spam or self-promotion</li>
-                <li>• Protect your privacy</li>
-                <li>• Report violations to moderators</li>
+            </div>
+
+            <div className="bg-gradient-to-br from-teal-600 to-blue-700 rounded-[2rem] p-8 text-white shadow-xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-4 opacity-10 rotate-12">
+                <Shield size={120} />
+              </div>
+              <h3 className="text-xl font-bold mb-6 flex items-center gap-2 relative z-10">
+                <Shield className="h-5 w-5" />
+                Community Rules
+              </h3>
+              <ul className="space-y-4 relative z-10">
+                {[
+                  { emoji: '🤝', text: 'Be respectful and courteous' },
+                  { emoji: '🚫', text: 'No harassment or hate speech' },
+                  { emoji: '📍', text: 'Stay on topic in each room' },
+                  { emoji: '🔒', text: 'Protect your personal privacy' }
+                ].map((rule, i) => (
+                  <li key={i} className="flex items-center gap-3 bg-white/10 p-3 rounded-xl backdrop-blur-sm border border-white/10 text-sm">
+                    <span>{rule.emoji}</span> {rule.text}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>

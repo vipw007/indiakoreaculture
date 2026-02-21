@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Building2, ChevronDown, ChevronUp } from 'lucide-react';
+import { Building2, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 
 interface Scenario {
   title: string;
@@ -113,13 +113,26 @@ export function OfficeCulturePage() {
         <title>Office & Professional Culture Guide - India vs. Korea | IndoKorean</title>
         <meta name="description" content="Navigate workplace differences between India and Korea with practical scenarios, explanations, and safe actions for every situation." />
       </Helmet>
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-4">
-            <Building2 className="h-10 w-10" />
-            <h1 className="text-4xl md:text-5xl">Office & Professional Culture</h1>
+      
+      {/* Header with Background Image */}
+      <div className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1758873272921-4b64aef3c32b?q=80&w=2064&auto=format&fit=crop" 
+            alt="Office Culture" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-indigo-900/60 backdrop-blur-[1px]" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-md border border-white/30">
+              <Building2 className="h-10 w-10 text-white" />
+            </div>
+            <h1 className="text-4xl md:text-6xl font-bold drop-shadow-lg">Office & Professional Culture</h1>
           </div>
-          <p className="text-xl text-blue-100 max-w-3xl">
+          <p className="text-xl md:text-2xl text-indigo-50 max-w-3xl leading-relaxed drop-shadow-md">
             Navigate workplace differences between India and Korea with practical scenarios, 
             explanations, and safe actions for every situation
           </p>
@@ -128,30 +141,34 @@ export function OfficeCulturePage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Info Box */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-          <h3 className="text-lg mb-2 text-gray-900 flex items-center gap-2">
-            <span>💼</span>
-            Understanding Workplace Culture
-          </h3>
-          <p className="text-gray-700 mb-3">
-            This guide helps you understand key differences in workplace culture between India and Korea. 
-            Each scenario provides context for both cultures and suggests safe actions that work in both environments.
-          </p>
-          <p className="text-sm text-gray-600">
-            <strong>Format:</strong> Scenario → Explanation (India vs Korea) → Safe Action
-          </p>
+        <div className="bg-white border border-indigo-100 rounded-2xl p-8 shadow-sm mb-12 flex flex-col md:flex-row items-center gap-6">
+          <div className="text-5xl">💼</div>
+          <div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Understanding Workplace Culture</h3>
+            <p className="text-gray-600 text-lg leading-relaxed">
+              This guide helps you understand key differences in workplace culture between India and Korea. 
+              Each scenario provides context for both cultures and suggests safe actions that work in both environments.
+            </p>
+            <div className="mt-4 flex items-center gap-4 text-sm font-bold uppercase tracking-widest text-indigo-600">
+              <span>Scenario</span>
+              <span className="text-gray-300">→</span>
+              <span>Explanation</span>
+              <span className="text-gray-300">→</span>
+              <span>Safe Action</span>
+            </div>
+          </div>
         </div>
 
         {/* Category Filter */}
-        <div className="mb-8">
-          <h2 className="text-xl mb-4 text-gray-900">Filter by Category</h2>
-          <div className="flex flex-wrap gap-2">
+        <div className="mb-12">
+          <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Filter by Category</h2>
+          <div className="flex flex-wrap gap-3">
             <button
               onClick={() => setSelectedCategory(null)}
-              className={`px-4 py-2 rounded-lg transition-colors ${
+              className={`px-6 py-2.5 rounded-full transition-all font-bold text-sm border ${
                 selectedCategory === null
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-100'
+                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg scale-105'
+                  : 'bg-white text-gray-600 border-gray-200 hover:border-indigo-300'
               }`}
             >
               All Scenarios
@@ -160,10 +177,10 @@ export function OfficeCulturePage() {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-lg transition-colors ${
+                className={`px-6 py-2.5 rounded-full transition-all font-bold text-sm border ${
                   selectedCategory === category
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg scale-105'
+                    : 'bg-white text-gray-600 border-gray-200 hover:border-indigo-300'
                 }`}
               >
                 {category}
@@ -173,11 +190,11 @@ export function OfficeCulturePage() {
         </div>
 
         {/* Scenarios */}
-        <div className="space-y-4">
+        <div className="space-y-6">
           {filteredScenarios.map((scenario) => (
             <div
               key={scenario.title}
-              className="bg-white rounded-lg shadow-sm overflow-hidden"
+              className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow"
             >
               <button
                 onClick={() =>
@@ -185,48 +202,46 @@ export function OfficeCulturePage() {
                     expandedScenario === scenario.title ? null : scenario.title
                   )
                 }
-                className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                className="w-full px-8 py-6 flex items-center justify-between hover:bg-gray-50/50 transition-colors"
               >
                 <div className="text-left">
-                  <h3 className="text-lg text-gray-900 mb-1">{scenario.title}</h3>
-                  <span className="text-sm text-indigo-600">{scenario.category}</span>
+                  <h3 className="text-xl font-bold text-gray-900 mb-1">{scenario.title}</h3>
+                  <span className="text-xs font-bold uppercase tracking-widest text-indigo-500">{scenario.category}</span>
                 </div>
-                {expandedScenario === scenario.title ? (
-                  <ChevronUp className="h-5 w-5 text-gray-400" />
-                ) : (
-                  <ChevronDown className="h-5 w-5 text-gray-400" />
-                )}
+                <div className={`p-2 rounded-full bg-gray-50 transition-transform duration-300 ${expandedScenario === scenario.title ? 'rotate-180 bg-indigo-50 text-indigo-600' : ''}`}>
+                  <ChevronDown className="h-5 w-5" />
+                </div>
               </button>
 
               {expandedScenario === scenario.title && (
-                <div className="px-6 pb-6 border-t border-gray-100">
-                  <div className="grid md:grid-cols-2 gap-6 mt-4 mb-6">
-                    <div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="text-2xl">🇮🇳</span>
-                        <h4 className="text-base text-gray-900">India</h4>
+                <div className="px-8 pb-8 border-t border-gray-50">
+                  <div className="grid md:grid-cols-2 gap-8 mt-8 mb-8">
+                    <div className="relative group">
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="text-3xl">🇮🇳</span>
+                        <h4 className="text-lg font-bold text-gray-900">India</h4>
                       </div>
-                      <p className="text-gray-700 bg-orange-50 p-4 rounded-lg">
-                        {scenario.india}
-                      </p>
+                      <div className="bg-orange-50/50 border border-orange-100 p-6 rounded-2xl text-gray-700 leading-relaxed italic">
+                        "{scenario.india}"
+                      </div>
                     </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="text-2xl">🇰🇷</span>
-                        <h4 className="text-base text-gray-900">Korea</h4>
+                    <div className="relative group">
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="text-3xl">🇰🇷</span>
+                        <h4 className="text-lg font-bold text-gray-900">Korea</h4>
                       </div>
-                      <p className="text-gray-700 bg-blue-50 p-4 rounded-lg">
-                        {scenario.korea}
-                      </p>
+                      <div className="bg-blue-50/50 border border-blue-100 p-6 rounded-2xl text-gray-700 leading-relaxed italic">
+                        "{scenario.korea}"
+                      </div>
                     </div>
                   </div>
 
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <h4 className="text-base text-gray-900 mb-2 flex items-center gap-2">
-                      <span>✅</span>
+                  <div className="bg-green-50/50 border border-green-100 rounded-2xl p-6">
+                    <h4 className="text-lg font-bold text-green-800 mb-3 flex items-center gap-2">
+                      <div className="bg-green-600 text-white p-1 rounded-full"><ChevronDown className="h-3 w-3 rotate-[-90deg]" /></div>
                       Safe Action (Works in Both Cultures)
                     </h4>
-                    <p className="text-gray-700">{scenario.safeAction}</p>
+                    <p className="text-green-900 font-medium leading-relaxed">{scenario.safeAction}</p>
                   </div>
                 </div>
               )}
@@ -235,15 +250,37 @@ export function OfficeCulturePage() {
         </div>
 
         {/* Bottom Tips */}
-        <div className="mt-12 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-          <h3 className="text-lg mb-3 text-gray-900">🌟 General Tips for Success</h3>
-          <ul className="space-y-2 text-gray-700">
-            <li>• <strong>Observe First:</strong> Spend your first month watching how others behave</li>
-            <li>• <strong>Ask Questions:</strong> It's better to ask than to make cultural mistakes</li>
-            <li>• <strong>Show Respect:</strong> When in doubt, be more formal and respectful</li>
-            <li>• <strong>Learn Basic Phrases:</strong> Knowing greetings in local language goes a long way</li>
-            <li>• <strong>Be Patient:</strong> Cultural adaptation takes time - be kind to yourself</li>
-          </ul>
+        <div className="mt-16 bg-gradient-to-br from-indigo-600 to-purple-700 rounded-[2rem] p-10 text-white shadow-xl">
+          <h3 className="text-3xl font-bold mb-8 flex items-center gap-3">
+            <Sparkles className="h-8 w-8 text-yellow-300" />
+            General Tips for Success
+          </h3>
+          <div className="grid md:grid-cols-2 gap-8">
+            <ul className="space-y-4">
+              <li className="flex items-start gap-4 bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/10">
+                <span className="text-2xl">👁️</span>
+                <p><strong>Observe First:</strong> Spend your first month watching how others behave before making changes.</p>
+              </li>
+              <li className="flex items-start gap-4 bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/10">
+                <span className="text-2xl">❓</span>
+                <p><strong>Ask Questions:</strong> It's better to ask than to make cultural mistakes. People appreciate the effort.</p>
+              </li>
+              <li className="flex items-start gap-4 bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/10">
+                <span className="text-2xl">🤝</span>
+                <p><strong>Show Respect:</strong> When in doubt, be more formal and respectful than you think is necessary.</p>
+              </li>
+            </ul>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-4 bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/10">
+                <span className="text-2xl">🗣️</span>
+                <p><strong>Learn Phrases:</strong> Knowing basic greetings in the local language goes a long way in building rapport.</p>
+              </li>
+              <li className="flex items-start gap-4 bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/10">
+                <span className="text-2xl">🧘</span>
+                <p><strong>Be Patient:</strong> Cultural adaptation takes time. Be kind to yourself during the transition.</p>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

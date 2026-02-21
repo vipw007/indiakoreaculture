@@ -7,7 +7,9 @@ import { ImageWithFallback } from './figma/ImageWithFallback';
 import { getCache, setCache } from '../data/cache';
 
 // Use Vite's syntax for environment variables
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://us-central1-indokorean.cloudfunctions.net';
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://127.0.0.1:5001/indokorean/us-central1'
+  : import.meta.env.VITE_API_BASE_URL || 'https://us-central1-indokorean.cloudfunctions.net';
 
 const priorityStates = [
   'rajasthan', 'maharashtra', 'uttar-pradesh', 'karnataka', 'kerala', 
@@ -123,7 +125,7 @@ export function TourismPage() {
               <div className="flex-shrink-0 flex items-center gap-2 bg-white/20 backdrop-blur-md rounded-lg p-1 border border-white/30">
                 <button
                   onClick={() => setSelectedRegion('india')}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all text-sm font-bold ${
+                  className={`flex items-center gap-2 px-6 py-2.5 rounded-lg transition-all text-sm font-bold ${
                     selectedRegion === 'india'
                       ? 'bg-white text-orange-600 shadow-md'
                       : 'text-white hover:bg-white/10'
@@ -134,7 +136,7 @@ export function TourismPage() {
                 </button>
                 <button
                   onClick={() => setSelectedRegion('korea')}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all text-sm font-bold ${
+                  className={`flex items-center gap-2 px-6 py-2.5 rounded-lg transition-all text-sm font-bold ${
                     selectedRegion === 'korea'
                       ? 'bg-white text-indigo-600 shadow-md'
                       : 'text-white hover:bg-white/10'
