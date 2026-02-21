@@ -34,7 +34,6 @@ interface VisaData {
   serviceCharges: number;
   processingTimeInDays: number;
   currency: string;
-  locale: string;
   documents: { icon: React.FC<any>; name: string }[];
   notes: string[];
   faqs: FaqItemData[];
@@ -48,11 +47,10 @@ const visaDatabase: Record<string, VisaData> = {
     entry: 'Double Entry',
     lengthOfStay: '30 days',
     validityPeriod: '1 year',
-    fees: 35000, // Approx 35,000 KRW
-    serviceCharges: 15000, // Approx 15,000 KRW
+    fees: 2100,
+    serviceCharges: 999,
     processingTimeInDays: 3,
-    currency: 'KRW',
-    locale: 'ko-KR',
+    currency: 'INR',
     documents: [
       { icon: Camera, name: 'Photo' },
       { icon: FileText, name: 'Passport' },
@@ -70,11 +68,10 @@ const visaDatabase: Record<string, VisaData> = {
     entry: 'Single Entry',
     lengthOfStay: 'Up to 90 days',
     validityPeriod: '3 months',
-    fees: 3200, // 3,200 INR
-    serviceCharges: 1380, // 1,380 INR
+    fees: 3200,
+    serviceCharges: 1380,
     processingTimeInDays: 15,
     currency: 'INR',
-    locale: 'en-IN',
     documents: [
       { icon: Camera, name: 'Photo' },
       { icon: FileText, name: 'Passport' },
@@ -154,14 +151,6 @@ export function VisaPage() {
     setTravellerCount(1);
     setDepartureDate(null);
   }, [selectedVisaKey]);
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat(visaData.locale, {
-      style: 'currency',
-      currency: visaData.currency,
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -292,10 +281,10 @@ export function VisaPage() {
                 </div>
 
                 <div className="space-y-2 pt-4 border-t">
-                    <div className="flex justify-between text-gray-600"><span>Visa Fees:</span> <span>{formatCurrency(visaData.fees * travellerCount)}</span></div>
-                    <div className="flex justify-between text-gray-600"><span>Service Charges:</span> <span>{formatCurrency(visaData.serviceCharges * travellerCount)}</span></div>
+                    <div className="flex justify-between text-gray-600"><span>Visa Fees:</span> <span>{new Intl.NumberFormat('en-IN', { style: 'currency', currency: visaData.currency, minimumFractionDigits: 0 }).format(visaData.fees * travellerCount)}</span></div>
+                    <div className="flex justify-between text-gray-600"><span>Service Charges:</span> <span>{new Intl.NumberFormat('en-IN', { style: 'currency', currency: visaData.currency, minimumFractionDigits: 0 }).format(visaData.serviceCharges * travellerCount)}</span></div>
                     <hr className="my-2"/>
-                    <div className="flex justify-between text-xl font-bold text-gray-900"><span>Total Amount:</span> <span>{formatCurrency(totalAmount)}</span></div>
+                    <div className="flex justify-between text-xl font-bold text-gray-900"><span>Total Amount:</span> <span>{new Intl.NumberFormat('en-IN', { style: 'currency', currency: visaData.currency, minimumFractionDigits: 0 }).format(totalAmount)}</span></div>
                 </div>
 
                 <button
