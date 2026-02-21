@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ArrowLeft, MapPin, Utensils, Users, CheckCircle, XCircle, MessageSquare, Shirt, Ticket, Phone, BookOpen, Star, Clock, Globe, ExternalLink } from 'lucide-react';
+import { ArrowLeft, MapPin, Utensils, Users, CheckCircle, XCircle, MessageSquare, Shirt, Ticket, Phone, BookOpen, Star, Clock, Globe, ExternalLink, Plane, Landmark, Waves, Trees, Castle, Award } from 'lucide-react';
 import { StateData } from '../data/statesData';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
@@ -11,35 +11,26 @@ const stateCache = new Map<string, StateData>();
 // Use Vite's syntax for environment variables
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://us-central1-indokorean.cloudfunctions.net';
 
-// Function to generate dynamic blog content from state data
-const generateBlogContent = (state: StateData): string => {
-  const attractionsHtml = (state.places && state.places.length > 0) ? `
-    <h2>🏰 Major Tourist Attractions</h2>
-    <p>Discover the most iconic landmarks and hidden gems in ${state.name}.</p>
-    <ul>
-      ${state.places.map(place => `<li><strong>${place.name}:</strong> ${place.description}</li>`).join('')}
-    </ul>
-  ` : '';
+const getCategoryIcon = (category?: string) => {
+  switch (category) {
+    case 'Religious': return <Landmark className="h-4 w-4" />;
+    case 'Beach': return <Waves className="h-4 w-4" />;
+    case 'Nature': return <Trees className="h-4 w-4" />;
+    case 'Fort':
+    case 'Historical': return <Castle className="h-4 w-4" />;
+    default: return <MapPin className="h-4 w-4" />;
+  }
+};
 
-  const foodHtml = (state.food && state.food.length > 0) ? `
-    <hr />
-    <h2>🍛 Food & Cuisine</h2>
-    <p>The local cuisine is a delightful experience. Here are some must-try dishes:</p>
-    <ul>
-      ${state.food.map(dish => `<li><strong>${dish.name} (${dish.type}):</strong> ${dish.description}</li>`).join('')}
-    </ul>
-  ` : '';
-
-  const cultureHtml = (state.culturalNorms && state.culturalNorms.length > 0) ? `
-    <hr />
-    <h2>🎭 Culture & Norms</h2>
-    <blockquote>${state.name} has a rich and vibrant culture. Understanding the local customs will make your trip more enjoyable.</blockquote>
-    <ul>
-      ${state.culturalNorms.map(norm => `<li>${norm}</li>`).join('')}
-    </ul>
-  ` : '';
-
-  return `${attractionsHtml}${foodHtml}${cultureHtml}`;
+const getCategoryColor = (category?: string) => {
+  switch (category) {
+    case 'Religious': return 'bg-orange-100 text-orange-700 border-orange-200';
+    case 'Beach': return 'bg-amber-100 text-amber-700 border-amber-200';
+    case 'Nature': return 'bg-green-100 text-green-700 border-green-200';
+    case 'Fort':
+    case 'Historical': return 'bg-purple-100 text-purple-700 border-purple-200';
+    default: return 'bg-blue-100 text-blue-700 border-blue-200';
+  }
 };
 
 export function StateDetailPage() {
@@ -63,13 +54,6 @@ export function StateDetailPage() {
         let singleState: any = await response.json();
 
         if (singleState) {
-          if (!singleState.blogContent) {
-            const dynamicBlogContent = generateBlogContent(singleState);
-            singleState = {
-              ...singleState,
-              blogContent: dynamicBlogContent
-            };
-          }
           stateCache.set(cacheKey, singleState);
           setState(singleState);
         } else {
@@ -97,21 +81,7 @@ export function StateDetailPage() {
     );
   }
 
-  if (!state) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Helmet>
-          <title>State Not Found | IndoKorean</title>
-        </Helmet>
-        <div className="text-center">
-          <h2 className="text-2xl mb-4 text-gray-900">State not found</h2>
-          <Link to="/tourism" className="text-indigo-600 hover:text-indigo-700">
-            ← Back to Tourism
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  if (!state) return null;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -133,99 +103,95 @@ export function StateDetailPage() {
               <span className="text-xl">{flag}</span>
               <span className="text-lg">{country}</span>
             </div>
-            <h1 className="text-4xl md:text-5xl text-white mb-2">{state.name}</h1>
+            <h1 className="text-4xl md:text-5xl text-white mb-2 font-bold">{state.name}</h1>
             <p className="text-xl text-gray-200">{state.description}</p>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Places to Visit */}
-        <section className="mb-12">
-          <div className="flex items-center gap-2 mb-6">
+        {/* Places to Visit Section */}
+        <section className="mb-16">
+          <div className="flex items-center gap-2 mb-8">
             <MapPin className="h-6 w-6 text-orange-600" />
-            <h2 className="text-2xl text-gray-900 font-bold">Places to Visit</h2>
+            <h2 className="text-3xl text-gray-900 font-bold">Places to Visit</h2>
           </div>
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Central Hub Card */}
+            <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl shadow-lg p-6 text-white flex flex-col justify-center items-center text-center border-4 border-blue-400/30">
+              <div className="bg-white/20 p-4 rounded-full mb-4">
+                <Plane className="h-10 w-10" />
+              </div>
+              <h3 className="text-2xl font-bold mb-2">{state.name} Hub</h3>
+              <p className="text-blue-100 text-sm">Main Airport / Railway Station</p>
+              <div className="mt-6 pt-6 border-t border-white/10 w-full">
+                <p className="text-xs uppercase tracking-widest font-bold text-blue-200">Starting Point</p>
+              </div>
+            </div>
+
             {state.places && state.places.map((place: any, index) => (
-              <div key={index} className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col border border-gray-100 hover:shadow-lg transition-shadow">
+              <div key={index} className={`bg-white rounded-xl shadow-md overflow-hidden flex flex-col border-2 transition-all duration-300 hover:shadow-xl ${place.isUNESCO ? 'border-amber-400' : 'border-gray-100'}`}>
                 <div className="aspect-video relative overflow-hidden">
                   <ImageWithFallback src={place.image} alt={place.name} className="w-full h-full object-cover" />
-                  {place.rating && (
-                    <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
-                      <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                      <span className="text-sm font-bold text-gray-900">{place.rating}</span>
-                      <span className="text-xs text-gray-500">({place.userRatingsTotal})</span>
+                  
+                  {/* Distance Badge */}
+                  <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5">
+                    <MapPin className="h-3 w-3 text-orange-400" />
+                    {place.distanceFromHub || (20 + index * 5)} km from Hub
+                  </div>
+
+                  {/* UNESCO Badge */}
+                  {place.isUNESCO && (
+                    <div className="absolute top-3 right-3 bg-amber-400 text-amber-950 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter flex items-center gap-1 shadow-lg">
+                      <Award className="h-3 w-3" />
+                      UNESCO Site
                     </div>
                   )}
                 </div>
                 
                 <div className="p-5 flex-grow">
-                  <h3 className="text-xl font-bold mb-2 text-gray-900">{place.name}</h3>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className={`p-1.5 rounded-lg ${getCategoryColor(place.category)}`}>
+                      {getCategoryIcon(place.category)}
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{place.category || 'Destination'}</span>
+                  </div>
+
+                  <h3 className="text-xl font-bold mb-2 text-gray-900 flex items-center gap-2">
+                    {place.name}
+                    {place.rating && <span className="text-xs bg-yellow-100 text-yellow-700 px-1.5 py-0.5 rounded flex items-center gap-0.5"><Star className="h-3 w-3 fill-yellow-700" />{place.rating}</span>}
+                  </h3>
+                  
                   <p className="text-gray-600 text-sm mb-4 line-clamp-2">{place.description}</p>
                   
-                  <div className="space-y-3">
+                  <div className="space-y-3 pt-3 border-t border-gray-50">
                     {place.address && (
-                      <div className="flex items-start gap-2 text-sm text-gray-600">
-                        <MapPin className="h-4 w-4 text-orange-500 flex-shrink-0 mt-0.5" />
-                        <span>{place.address}</span>
+                      <div className="flex items-start gap-2 text-xs text-gray-500">
+                        <MapPin className="h-3.5 w-3.5 text-gray-400 flex-shrink-0 mt-0.5" />
+                        <span className="line-clamp-1">{place.address}</span>
                       </div>
                     )}
                     
-                    {place.openingHours && (
-                      <div className="flex items-start gap-2 text-sm text-gray-600">
-                        <Clock className="h-4 w-4 text-blue-500 flex-shrink-0 mt-0.5" />
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="font-semibold">Hours:</span>
-                            {place.isOpenNow !== undefined && (
-                              <span className={place.isOpenNow ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
-                                {place.isOpenNow ? "Open Now" : "Closed"}
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-xs mt-1 text-gray-500">{place.openingHours[new Date().getDay() === 0 ? 6 : new Date().getDay() - 1]}</p>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="flex flex-wrap gap-2 pt-2">
+                    <div className="flex flex-wrap gap-2">
                       {place.phoneNumber && (
-                        <a href={`tel:${place.phoneNumber}`} className="flex items-center gap-1 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full text-xs font-medium hover:bg-blue-100 transition-colors">
-                          <Phone className="h-3 w-3" />
-                          Call
+                        <a href={`tel:${place.phoneNumber}`} className="p-2 bg-gray-50 text-gray-600 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                          <Phone className="h-4 w-4" />
                         </a>
                       )}
                       {place.website && (
-                        <a href={place.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 px-3 py-1.5 bg-orange-50 text-orange-700 rounded-full text-xs font-medium hover:bg-orange-100 transition-colors">
-                          <Globe className="h-3 w-3" />
-                          Website
-                          <ExternalLink className="h-2 w-2" />
+                        <a href={place.website} target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-50 text-gray-600 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition-colors">
+                          <Globe className="h-4 w-4" />
                         </a>
                       )}
+                      <div className="flex-grow"></div>
+                      <div className="flex items-center gap-1 text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-lg">
+                        <Ticket className="h-3 w-3" />
+                        {place.ticketPrice?.indian || 'Free'}
+                      </div>
                     </div>
                   </div>
                 </div>
-
-                {/* Ticket Pricing Footer */}
-                {place.ticketPrice && (
-                  <div className="bg-gray-50 p-4 border-t border-gray-100">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Ticket className="h-4 w-4 text-green-600" />
-                      <span className="text-xs font-bold uppercase tracking-wider text-gray-500">Ticket Pricing</span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <p className="text-gray-500 text-xs">Local</p>
-                        <p className="font-bold text-gray-900">{place.ticketPrice.indian}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-500 text-xs">Foreigner</p>
-                        <p className="font-bold text-gray-900">{place.ticketPrice.foreigner}</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
               </div>
             ))}
           </div>
@@ -261,7 +227,7 @@ export function StateDetailPage() {
           </section>
         )}
 
-        {/* Cultural Norms, Greetings, Clothing, Blog, Do's/Don'ts sections remain similar but with updated styling */}
+        {/* Cultural Norms */}
         <div className="grid md:grid-cols-2 gap-8 mb-12">
           <section>
             <div className="flex items-center gap-2 mb-6">
